@@ -8,7 +8,7 @@ namespace Phpteda\Generator;
  * @author jens
  * @since 2013-03-08
  */
-class Configuration
+class Options
 {
     /** @var array */
     private $options = array();
@@ -34,12 +34,19 @@ class Configuration
      * @param $name
      * @return bool
      */
-    public function __get($name)
+    public function hasOption($name)
     {
-        if (isset($this->options[$name])) {
+        return isset($this->options[$name]);
+    }
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function getOption($name)
+    {
+        if ($this->hasOption($name)) {
             return $this->options[$name];
         }
-
-        return false;
     }
 }

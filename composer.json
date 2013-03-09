@@ -12,5 +12,11 @@
             "name": "Jens Wiese",
             "email": "jens@dev.lohering.de"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-0": {
+            "Phpteda": "src/",
+            "Examples": "examples/"
+        }
+    }
 }
