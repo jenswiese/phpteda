@@ -3,9 +3,9 @@
 namespace Phpteda\Generator;
 
 /**
- * Class for ...
+ * Class for Options used to define generator goals
  *
- * @author jens
+ * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-03-08
  */
 class Options
