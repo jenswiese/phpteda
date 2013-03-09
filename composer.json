@@ -1,0 +1,16 @@
+{
+    "name": "jenswiese/phpteda",
+    "description": "Test Data Generation",
+    "require": {
+        "symfony/console": "v2.2.0",
+        "fzaninotto/faker": "dev-master",
+        "doctrine/common": "2.3.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jens Wiese",
+            "email": "jens@dev.lohering.de"
+        }
+    ]
+}
