@@ -4,7 +4,7 @@ use Faker\Factory;
 use Faker\Generator;
 
 /**
- * Class for ...
+ * Class for generating CVS file with Users
  *
  * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-03-09
@@ -16,6 +16,7 @@ use Faker\Generator;
  * @method UserGenerator blockedUser()
  * @method UserGenerator createdAtToday()
  * @method UserGenerator noEmail()
+ * @method UserGenerator withUserCategory($userCategory)
  *
  */
 class UserGenerator extends \Phpteda\Generator\AbstractGenerator
@@ -49,6 +50,14 @@ class UserGenerator extends \Phpteda\Generator\AbstractGenerator
 
         $user->setEmail(
             $this->chooseIf($this->noEmail, null, $this->faker->safeEmail)
+        );
+
+        $user->setUserCategory(
+            $this->chooseIf(
+                $this->withUserCategory,
+                $this->withUserCategory,
+                $this->faker->randomNumber(1, 3)
+            )
         );
 
         $user->setCreatedAt(

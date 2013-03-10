@@ -18,6 +18,5 @@ $generator
     ->generate()
     ->activeUser()
     ->noEmail()
+    ->withUserCategory(1234)
     ->amount(20);
-
-

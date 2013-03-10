@@ -29,6 +29,9 @@ class User
     /** @var bool */
     protected $isBlocked;
 
+    /** @var int */
+    protected $userCategory;
+
     /**
      * @param \DateTime $createdAt
      */
@@ -141,6 +144,23 @@ class User
         return $this->lastname;
     }
 
+
+    /**
+     * @param int $userCategory
+     */
+    public function setUserCategory($userCategory)
+    {
+        $this->userCategory = $userCategory;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUserCategory()
+    {
+        return $this->userCategory;
+    }
+
     /**
      * @return string
      */
@@ -150,6 +170,7 @@ class User
             $this->getFirstname(),
             $this->getLastname(),
             $this->getEmail(),
+            $this->getUserCategory(),
             $this->getCreatedAt()->format('d.m.Y H:i:s'),
             $this->getIsActive(),
             $this->getIsDeleted(),
