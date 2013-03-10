@@ -2,6 +2,7 @@
 
 use Faker\Factory;
 use Faker\Generator;
+use Phpteda\Util\Evaluator;
 
 /**
  * Class for generating CVS file with Users
@@ -44,47 +45,29 @@ class UserGenerator extends \Phpteda\Generator\AbstractGenerator
      */
     protected function generateData()
     {
+        $firstName = $this->faker->firstName;
+        $lastName = $this->faker->lastName;
+        $email = Evaluator::when($this->noEmail)->then(null)->otherwise($this->faker->safeEmail);
+        $userCategory =
+            Evaluator::when($this->withUserCategory)->otherwise($this->faker->randomNumber(1, 3));
+        $createdAt =
+            Evaluator::when($this->createdAtToday)
+            ->then($this->faker->dateTimeBetween('today'))
+            ->otherwise($this->faker->dateTimeBetween('-1 year', '-6 months'));
+
+        $isActive = Evaluator::when($this->activeUser)->then(true)->otherwise($this->faker->boolean);
+        $isDeleted = Evaluator::when($this->deletedUser)->then(true)->otherwise($this->faker->boolean);
+        $isBlocked = Evaluator::when($this->blockedUser)->then(true)->otherwise($this->faker->boolean);
+
         $user = new User();
-        $user->setFirstname($this->faker->firstName);
-        $user->setLastname($this->faker->lastName);
-
-        $user->setEmail(
-            $this->chooseIf($this->noEmail, null, $this->faker->safeEmail)
-        );
-
-        $user->setUserCategory(
-            $this->chooseIf(
-                $this->withUserCategory,
-                $this->withUserCategory,
-                $this->faker->randomNumber(1, 3)
-            )
-        );
-
-        $user->setCreatedAt(
-            $this->chooseIf(
-                $this->createdAtToday,
-                $this->faker->dateTimeBetween('today'),
-                $this->faker->dateTimeBetween('-1 year', '-6 months')
-            )
-        );
-
-        $user->setIsActive(
-            $this->chooseIf(
-                $this->activeUser, true, $this->faker->boolean
-            )
-        );
-
-        $user->setIsDeleted(
-            $this->chooseIf(
-                $this->deletedUser, true, $this->faker->boolean
-            )
-        );
-
-        $user->setIsBlocked(
-            $this->chooseIf(
-                $this->blockedUser, true, $this->faker->boolean
-            )
-        );
+        $user->setFirstname($firstName);
+        $user->setLastname($lastName);
+        $user->setEmail($email);
+        $user->setCreatedAt($createdAt);
+        $user->setUserCategory($userCategory);
+        $user->setIsActive($isActive);
+        $user->setIsDeleted($isDeleted);
+        $user->setIsBlocked($isBlocked);
 
         file_put_contents('/tmp/phpteda_user.csv', $user, FILE_APPEND);
     }

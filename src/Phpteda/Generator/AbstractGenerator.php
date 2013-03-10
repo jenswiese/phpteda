@@ -101,17 +101,6 @@ abstract class AbstractGenerator
     }
 
     /**
-     * @param bool $condition
-     * @param mixed $choiceOne
-     * @param mixed $choiceTwo
-     * @return mixed
-     */
-    protected function chooseIf($condition, $choiceOne, $choiceTwo)
-    {
-        return $condition ? $choiceOne : $choiceTwo;
-    }
-
-    /**
      * Resets current generation process
      */
     protected function reset()
