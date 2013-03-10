@@ -1,4 +1,5 @@
 <?php
+
 namespace Phpteda\Generator;
 
 /**
@@ -20,59 +21,27 @@ class OptionsTest extends \PHPUnit_Framework_TestCase
         $this->object = new Options;
     }
 
-    /**
-     * Tears down the fixture, for example, closes a network connection.
-     * This method is called after a test is executed.
-     */
-    protected function tearDown()
-    {
-    }
-
-    /**
-     * @covers Phpteda\Generator\Options::setBooleanOption
-     * @todo   Implement testSetBooleanOption().
-     */
     public function testSetBooleanOption()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->object->setBooleanOption('testOpt');
+        $this->assertTrue($this->object->getOption('testOpt'));
     }
 
-    /**
-     * @covers Phpteda\Generator\Options::setOption
-     * @todo   Implement testSetOption().
-     */
     public function testSetOption()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->object->setOption('testOpt', 'value');
+        $this->assertEquals('value', $this->object->getOption('testOpt'));
     }
 
-    /**
-     * @covers Phpteda\Generator\Options::hasOption
-     * @todo   Implement testHasOption().
-     */
     public function testHasOption()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->assertFalse($this->object->hasOption('testOpt'));
+        $this->object->setOption('testOpt', 'value');
+        $this->assertTrue($this->object->hasOption('testOpt'));
     }
 
-    /**
-     * @covers Phpteda\Generator\Options::getOption
-     * @todo   Implement testGetOption().
-     */
-    public function testGetOption()
+    public function testGettingNotExistingOption()
     {
-        // Remove the following lines when you implement this test.
-        $this->markTestIncomplete(
-          'This test has not been implemented yet.'
-        );
+        $this->assertNull($this->object->getOption('testOpt'));
     }
 }

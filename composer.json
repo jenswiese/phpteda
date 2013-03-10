@@ -4,7 +4,8 @@
     "require": {
         "symfony/console": "v2.2.0",
         "fzaninotto/faker": "dev-master",
-        "doctrine/common": "2.3.0"
+        "doctrine/common": "2.3.0",
+        "mockery/mockery": "dev-master"
     },
     "license": "MIT",
     "authors": [

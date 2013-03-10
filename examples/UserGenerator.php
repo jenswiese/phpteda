@@ -10,6 +10,7 @@ use Faker\Generator;
  * @since 2013-03-09
  *
  *
+ * @method UserGenerator generate()
  * @method UserGenerator activeUser()
  * @method UserGenerator deletedUser()
  * @method UserGenerator blockedUser()

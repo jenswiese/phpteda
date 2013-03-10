@@ -32,16 +32,26 @@ abstract class AbstractGenerator
     }
 
     /**
+     * @return AbstractGenerator
+     */
+    public function generate()
+    {
+        $this->reset();
+        return $this;
+    }
+
+    /**
      * @param $name
      * @param $arguments
-     * @return mixed|AbstractGenerator
+     *
+     * @return AbstractGenerator
      */
     public function __call($name, $arguments)
     {
         if (empty($arguments)) {
             $this->options->setBooleanOption($name);
         } else {
-            $this->options->setOption($name, $arguments);
+            $this->options->setOption($name, $arguments[0]);
         }
 
         return $this;
@@ -113,7 +123,7 @@ abstract class AbstractGenerator
     /**
      * Implements custom way to delete existing data
      *
-     * @return AbstractGenerator
+     * @return void
      */
     abstract protected function removeExistingData();
 
