@@ -11,7 +11,7 @@ use Phpteda\Util\Evaluator;
  * @since 2013-03-09
  *
  *
- * @method UserGenerator generate()
+ * @method static UserGenerator generate()
  * @method UserGenerator activeUser()
  * @method UserGenerator deletedUser()
  * @method UserGenerator blockedUser()
@@ -22,11 +22,6 @@ use Phpteda\Util\Evaluator;
  */
 class UserGenerator extends \Phpteda\Generator\AbstractGenerator
 {
-    public function __construct(Generator $faker = null)
-    {
-        parent::__construct($faker);
-    }
-
     /**
      * Implements custom way to delete existing data
      *

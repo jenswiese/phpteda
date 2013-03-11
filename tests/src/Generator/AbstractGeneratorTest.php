@@ -24,7 +24,7 @@ class AbstractGeneratorTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->fakerMock = Mockery::mock('\Faker\Generator');
-        $this->object = new DummyGenerator($this->fakerMock);
+        $this->object = DummyGenerator::generate($this->fakerMock);
 
         $this->verificationMock = Mockery::mock('CallVerificationDummy');
         $this->verificationMock->shouldReceive('removeExistingData')->andReturnNull()->byDefault();

@@ -24,20 +24,20 @@ abstract class AbstractGenerator
 
     /**
      * @param \Faker\Generator $faker
+     * @return AbstractGenerator
      */
-    public function __construct(Generator $faker)
+    public static function generate(Generator $faker)
     {
-        $this->faker = $faker;
-        $this->options = new Options();
+        return new static($faker);
     }
 
     /**
-     * @return AbstractGenerator
+     * @param \Faker\Generator $faker
      */
-    public function generate()
+    protected function __construct(Generator $faker)
     {
-        $this->reset();
-        return $this;
+        $this->faker = $faker;
+        $this->options = new Options();
     }
 
     /**

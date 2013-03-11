@@ -5,17 +5,14 @@ require_once 'UserGenerator.php';
 require_once 'User.php';
 
 $faker = Faker\Factory::create('de_DE');
-$generator = new UserGenerator($faker);
 
-$generator
-    ->generate()
+UserGenerator::generate($faker)
     ->activeUser()
     ->createdAtToday()
     ->shouldRemoveExistingData()
-    ->amount(10);
+    ->amount(20);
 
-$generator
-    ->generate()
+UserGenerator::generate($faker)
     ->activeUser()
     ->noEmail()
     ->withUserCategory(1234)
