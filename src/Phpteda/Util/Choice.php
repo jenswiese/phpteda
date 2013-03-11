@@ -9,7 +9,7 @@ namespace Phpteda\Util;
  * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-03-10
  */
-class Evaluator
+class Choice
 {
     /** @var bool */
     protected $whenValue = false;
@@ -19,7 +19,7 @@ class Evaluator
 
     /**
      * @param bool $condition
-     * @return Evaluator
+     * @return Choice
      */
     public static function when($condition)
     {
@@ -36,7 +36,7 @@ class Evaluator
 
     /**
      * @param mixed $value
-     * @return Evaluator
+     * @return Choice
      */
     public function then($value)
     {

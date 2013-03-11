@@ -2,7 +2,7 @@
 
 use Faker\Factory;
 use Faker\Generator;
-use Phpteda\Util\Evaluator;
+use Phpteda\Util\Choice;
 
 /**
  * Class for generating CVS file with Users
@@ -42,17 +42,17 @@ class UserGenerator extends \Phpteda\Generator\AbstractGenerator
     {
         $firstName = $this->faker->firstName;
         $lastName = $this->faker->lastName;
-        $email = Evaluator::when($this->noEmail)->then(null)->otherwise($this->faker->safeEmail);
+        $email = Choice::when($this->noEmail)->then(null)->otherwise($this->faker->safeEmail);
         $userCategory =
-            Evaluator::when($this->withUserCategory)->otherwise($this->faker->randomNumber(1, 3));
+            Choice::when($this->withUserCategory)->otherwise($this->faker->randomNumber(1, 3));
         $createdAt =
-            Evaluator::when($this->createdAtToday)
+            Choice::when($this->createdAtToday)
             ->then($this->faker->dateTimeBetween('today'))
             ->otherwise($this->faker->dateTimeBetween('-1 year', '-6 months'));
 
-        $isActive = Evaluator::when($this->activeUser)->then(true)->otherwise($this->faker->boolean);
-        $isDeleted = Evaluator::when($this->deletedUser)->then(true)->otherwise($this->faker->boolean);
-        $isBlocked = Evaluator::when($this->blockedUser)->then(true)->otherwise($this->faker->boolean);
+        $isActive = Choice::when($this->activeUser)->then(true)->otherwise($this->faker->boolean);
+        $isDeleted = Choice::when($this->deletedUser)->then(true)->otherwise($this->faker->boolean);
+        $isBlocked = Choice::when($this->blockedUser)->then(true)->otherwise($this->faker->boolean);
 
         $user = new User();
         $user->setFirstname($firstName);
