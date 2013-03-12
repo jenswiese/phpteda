@@ -10,6 +10,9 @@ use Mockery\MockInterface;
  *
  * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-03-10
+ *
+ * @method DummyGenerator isActive()
+ * @method DummyGenerator withValue($value)
  */
 class DummyGenerator extends \Phpteda\Generator\AbstractGenerator
 {
