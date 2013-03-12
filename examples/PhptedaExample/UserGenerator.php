@@ -1,5 +1,7 @@
 <?php
 
+namespace Phpteda\Examples;
+
 use Faker\Factory;
 use Phpteda\Util\Choice;
 

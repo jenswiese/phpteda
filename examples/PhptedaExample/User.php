@@ -1,5 +1,7 @@
 <?php
 
+namespace Phpteda\Examples;
+
 /**
  * Example User
  *

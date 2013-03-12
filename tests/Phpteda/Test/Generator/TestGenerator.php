@@ -1,6 +1,6 @@
 <?php
 
-namespace Phpteda\Generator;
+namespace Phpteda\Test\Generator;
 
 use Mockery\MockInterface;
 
@@ -11,10 +11,10 @@ use Mockery\MockInterface;
  * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-03-10
  *
- * @method DummyGenerator isActive()
- * @method DummyGenerator withValue($value)
+ * @method TestGenerator isActive()
+ * @method TestGenerator withValue($value)
  */
-class DummyGenerator extends \Phpteda\Generator\AbstractGenerator
+class TestGenerator extends \Phpteda\Generator\AbstractGenerator
 {
     protected $verificationMock;
 

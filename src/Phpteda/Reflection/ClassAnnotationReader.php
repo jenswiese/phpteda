@@ -96,15 +96,15 @@ class ClassAnnotationReader
 
         preg_match_all($pattern, $methodString, $matches, PREG_SET_ORDER);
 
-        $returnType = trim($matches[1]);
-        $methodName = trim($matches[3]);
-        $parameterType = trim($matches[4]);
-        $parameterName = trim(str_replace('$', '', $matches[5]));
-        $description = trim($matches[6]);
+        $returnType = trim($matches[0][1]);
+        $methodName = trim($matches[0][3]);
+        $parameterType = trim($matches[0][4]);
+        $parameterName = trim(str_replace('$', '', $matches[0][5]));
+        $description = trim($matches[0][6]);
 
         return array(
-            'name' => $methodName,
             'returnType' => $returnType,
+            'name' => $methodName,
             'parameterType' => $parameterType,
             'parameterName' => $parameterName,
             'description' => $description

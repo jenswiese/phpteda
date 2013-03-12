@@ -4,7 +4,6 @@
     "require": {
         "symfony/console": "v2.2.0",
         "fzaninotto/faker": "dev-master",
-        "doctrine/common": "2.3.0",
         "mockery/mockery": "dev-master"
     },
     "license": "MIT",
@@ -17,7 +16,8 @@
     "autoload": {
         "psr-0": {
             "Phpteda": "src/",
-            "Examples": "examples/"
+            "Phpteda\\Test\\": "tests/",
+            "PhptedaExample": "examples/"
         }
     }
 }
