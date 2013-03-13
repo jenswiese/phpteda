@@ -46,7 +46,7 @@ class ClassAnnotationReader
             throw new OutOfBoundsException('ReflectionClass is not set.');
         }
 
-        $pattern = is_null($annotation) ? "/\@([a-zA-Z1-9]*) (.*)/" : "/\@" . $annotation . " (.*)/";
+        $pattern = is_null($annotation) ? "/\@([a-zA-Z1-9]*) (.*)/" : "/\@(" . $annotation . ") (.*)/";
         preg_match_all(
             $pattern,
             $this->reflectionClass->getDocComment(),
