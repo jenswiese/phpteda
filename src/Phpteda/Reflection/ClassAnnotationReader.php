@@ -55,12 +55,12 @@ class ClassAnnotationReader
         );
 
         $annotations = array();
-        foreach($matches as $match) {
+        foreach ($matches as $match) {
             $name = $match[1];
             $value = $match[2];
 
             $annotations[$name][] = $value;
-         }
+        }
 
         if (!is_null($annotation)) {
             $annotations = $annotations[$annotation];
