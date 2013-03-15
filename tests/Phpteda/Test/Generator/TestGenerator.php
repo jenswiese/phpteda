@@ -3,6 +3,7 @@
 namespace Phpteda\Test\Generator;
 
 use Mockery\MockInterface;
+use Phpteda\Generator\AbstractGenerator;
 
 /**
  * Class for testing the AbstractGenerator, in order to check the
@@ -14,7 +15,7 @@ use Mockery\MockInterface;
  * @method TestGenerator isActive()
  * @method TestGenerator withValue($value)
  */
-class TestGenerator extends \Phpteda\Generator\AbstractGenerator
+class TestGenerator extends AbstractGenerator
 {
     protected $verificationMock;
 
