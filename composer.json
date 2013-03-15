@@ -6,6 +6,12 @@
         "fzaninotto/faker": "dev-master",
         "mockery/mockery": "dev-master"
     },
+    "bin": [
+        "bin/phpteda"
+    ],
+    "config": {
+        "bin-dir": "bin"
+    },
     "license": "MIT",
     "authors": [
         {
