@@ -28,6 +28,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
     public function testHasProperty()
     {
+        $this->assertFalse($this->object->hasGeneratorDirectory());
         $this->object->setGeneratorDirectory('generator/test/dir');
         $this->assertTrue($this->object->hasGeneratorDirectory());
     }
