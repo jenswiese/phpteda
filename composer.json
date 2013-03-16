@@ -4,7 +4,8 @@
     "require": {
         "symfony/console": "v2.2.0",
         "fzaninotto/faker": "dev-master",
-        "mockery/mockery": "dev-master"
+        "mockery/mockery": "dev-master",
+        "mikey179/vfsStream": "dev-master"
     },
     "bin": [
         "bin/phpteda.php"

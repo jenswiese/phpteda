@@ -16,17 +16,21 @@ class Config
     const CONFIGFILE_NAME = '.phpteda';
 
     /** @var string */
+    protected $directory;
+
+    /** @var string */
     protected $filepath;
 
     /** @var array */
     protected $configuration;
 
     /**
-     * @param $filepath
+     * @param $directory
      */
-    public function __construct($filepath)
+    public function __construct($directory)
     {
-        $this->filepath = $filepath;
+        $this->directory = $directory;
+        $this->filepath = $directory . DIRECTORY_SEPARATOR . self::CONFIGFILE_NAME;
         $this->configuration = $this->readConfigurationFromFile();
     }
 
@@ -57,7 +61,7 @@ class Config
      */
     public function save()
     {
-        file_put_contents($this->filepath . '/' . self::CONFIGFILE_NAME, serialize($this->configuration));
+        file_put_contents($this->filepath, serialize($this->configuration));
     }
 
     /**
@@ -65,6 +69,10 @@ class Config
      */
     protected function readConfigurationFromFile()
     {
+        if (!file_exists($this->filepath)) {
+            return array();
+        }
+
         $serializedConfig = file_get_contents($this->filepath);
         return (array) unserialize($serializedConfig);
     }
