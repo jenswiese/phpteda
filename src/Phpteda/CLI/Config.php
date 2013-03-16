@@ -37,7 +37,7 @@ class Config
     /**
      * @param $name
      * @param $arguments
-     * @return mixed|Config
+     * @return mixed|Config|bool
      * @throws \RuntimeException
      */
     public function __call($name, $arguments)
@@ -49,6 +49,9 @@ class Config
             $configParam = substr($name, 3);
             $this->configuration[$configParam] = (count($arguments) == 1) ? $arguments[0] : $arguments;
             $returnValue = $this;
+        } elseif ('has' == substr($name, 0, 3)) {
+            $configParam = substr($name, 3);
+            $returnValue = isset($this->configuration[$configParam]);
         } else {
             throw new \RuntimeException("Method '" . $name . "' does not exists.");
         }
