@@ -49,7 +49,7 @@ class ShowCommand extends Command
 
         $table = Table::create($output, 132);
         foreach ($iterator as $generatorFile) {
-            $table->addRow()->addColumn($generatorFile->getFilename());
+            $table->addRow()->addColumn($generatorFile->getBasename('Generator.php'));
         }
         $table->end();
     }

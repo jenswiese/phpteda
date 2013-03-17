@@ -17,8 +17,10 @@ use Phpteda\CLI\Application;
 use Phpteda\CLI\Config;
 use Phpteda\CLI\Command\InitCommand;
 use Phpteda\CLI\Command\ShowCommand;
+use Phpteda\CLI\Command\GenerateCommand;
 
 $application = new Application(new Config(getcwd()));
 $application->add(new InitCommand());
 $application->add(new ShowCommand());
+$application->add(new GenerateCommand());
 $application->run();
