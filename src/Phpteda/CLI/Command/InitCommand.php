@@ -20,7 +20,7 @@ class InitCommand extends Command
     {
         $this
             ->setName('init')
-            ->setDescription('Initialize project settings.');
+            ->setDescription('Initialize project settings');
     }
 
     /**
@@ -30,28 +30,38 @@ class InitCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $dialog = new DialogHelper();
-
         $output->writeln($this->getApplication()->getLongVersion());
         $output->writeln('');
+
+        $this->askGeneratorDirectory($output);
+
+        $this->getApplication()->getConfig()->save();
+        $output->writeln('<info>Configuration is written.</info>');
+    }
+
+    /**
+     * @param OutputInterface $output
+     */
+    protected function askGeneratorDirectory(OutputInterface $output)
+    {
+        $dialog = new DialogHelper();
+        $config = $this->getApplication()->getConfig();
 
         while (true) {
             $directory = $dialog->ask(
                 $output,
-                "<question>Provide directory for Generators:</question> ",
-                $this->getApplication()->getConfig()->getGeneratorDirectory()
+                "<question>Provide directory for Generators:</question> [" . $config->getGeneratorDirectory() . "] ",
+                $config->getGeneratorDirectory()
             );
+
             if (is_dir(realpath($directory))) {
                 $output->writeln("Writing '" . realpath($directory) . "' to configfile.");
-                $this->getApplication()
-                    ->getConfig()
-                    ->setGeneratorDirectory(realpath($directory))
-                    ->save();
+                $config->setGeneratorDirectory(realpath($directory));
                 break;
             }
             $output->writeln('<error>This is not a valid directory</error>');
         }
-
-        $output->writeln('<info>Configuration is written.</info>');
     }
+
+
 }

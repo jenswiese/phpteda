@@ -40,7 +40,7 @@ class Table
     /**
      * Creates Table
      *
-     * @param \Symfony\Component\Console\Output\Output $output
+     * @param OutputInterface $output
      * @param $width
      * @return Table
      */
@@ -66,10 +66,11 @@ class Table
     /**
      * Add column to current row
      *
-     * @param string $content
-     * @return Table
+     * @param $content
+     * @param null $width
+     * @return $this
      */
-    public function addColumn($content)
+    public function addColumn($content, $width = null)
     {
         $this->columns[] = $content;
 
