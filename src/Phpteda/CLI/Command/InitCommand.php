@@ -8,6 +8,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\DialogHelper;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 /**
  * InitCommand
@@ -33,9 +35,10 @@ class InitCommand extends Command
         $output->writeln($this->getApplication()->getLongVersion());
         $output->writeln('');
 
+        $this->askBootstrapPathname($output);
         $this->askGeneratorDirectory($output);
 
-        $this->getApplication()->getConfig()->save();
+        $this->getApplication()->getConfig();
         $output->writeln('<info>Configuration is written.</info>');
     }
 
@@ -51,7 +54,8 @@ class InitCommand extends Command
             $directory = $dialog->ask(
                 $output,
                 "<question>Provide directory for Generators:</question> [" . $config->getGeneratorDirectory() . "] ",
-                $config->getGeneratorDirectory()
+                $config->getGeneratorDirectory(),
+                $this->getAvailableGeneratorDirectories()
             );
 
             if (is_dir(realpath($directory))) {
@@ -59,9 +63,85 @@ class InitCommand extends Command
                 $config->setGeneratorDirectory(realpath($directory));
                 break;
             }
-            $output->writeln('<error>This is not a valid directory</error>');
+            $output->writeln('<error>This is not a valid directory.</error>');
         }
     }
 
+    /**
+     * @param OutputInterface $output
+     */
+    protected function askBootstrapPathname(OutputInterface $output)
+    {
+        $dialog = new DialogHelper();
+        $config = $this->getApplication()->getConfig();
 
+        while (true) {
+            $bootstrapPathname = $dialog->ask(
+                $output,
+                "<question>Provide path for bootstrap file:</question> [" . $config->getBootstrapPathname() . "] ",
+                $config->getBootstrapPathname(),
+                $this->getAvailableBootstrapPathnames()
+            );
+
+            if (empty($bootstrapPathname)) {
+                break;
+            }
+
+            if (is_file(realpath($bootstrapPathname))) {
+                $output->writeln("Writing '" . realpath($bootstrapPathname) . "' to configfile.");
+                $config->setBootstrapPathname(realpath($bootstrapPathname));
+                break;
+            }
+            $output->writeln('<error>This is not a valid file.</error>');
+        }
+    }
+
+    /**
+     * @return array
+     */
+    protected function getAvailableBootstrapPathnames()
+    {
+        $bootstrapPathnames = array();
+
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(getcwd()));
+        /** @var \DirectoryIterator $entry */
+        foreach ($iterator as $entry) {
+            if ('bootstrap.php' != $entry->getBasename()) {
+                continue;
+            }
+
+            $bootstrapPathnames[] = $entry->getPathname();
+        }
+
+        return $bootstrapPathnames;
+    }
+
+    /**
+     * Retrieves directories that are most likely made to hold generators
+     *
+     * @return array
+     */
+    protected function getAvailableGeneratorDirectories()
+    {
+        $directories = array();
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(
+                getcwd(),
+                RecursiveDirectoryIterator::SKIP_DOTS
+            ),
+            RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        foreach ($iterator as $entry) {
+            $containsGenerator = (false !== strpos(strtolower($entry->getFilename()), 'generator'));
+            if (!$entry->isDir() || !$containsGenerator) {
+                continue;
+            }
+
+            $directories[] = $entry->getPathname();
+        }
+
+        return $directories;
+    }
 }

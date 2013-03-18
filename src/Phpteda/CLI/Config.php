@@ -8,8 +8,15 @@ namespace Phpteda\CLI;
  * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-03-15
  *
- * @method setGeneratorDirectory($path)
+ * @method setGeneratorDirectory(string $path)
+ * @method bool hasGeneratorDirectory()
  * @method string getGeneratorDirectory()
+ *
+ * @method setBootstrapPathname(string $path)
+ * @method bool hasBootstrapPathname()
+ * @method string getBootstrapPathname()
+
+ *
  */
 class Config
 {
@@ -43,15 +50,11 @@ class Config
     public function __call($name, $arguments)
     {
         if ('get' == substr($name, 0, 3)) {
-            $configParam = substr($name, 3);
-            $returnValue = isset($this->configuration[$configParam]) ? $this->configuration[$configParam] : null;
+            $returnValue = $this->handleGetterMethod($name);
         } elseif ('set' == substr($name, 0, 3)) {
-            $configParam = substr($name, 3);
-            $this->configuration[$configParam] = (count($arguments) == 1) ? $arguments[0] : $arguments;
-            $returnValue = $this;
+            $returnValue = $this->handleSetterMethod($name, $arguments);
         } elseif ('has' == substr($name, 0, 3)) {
-            $configParam = substr($name, 3);
-            $returnValue = isset($this->configuration[$configParam]);
+            $returnValue = $this->handleHasMethod($name);
         } else {
             throw new \RuntimeException("Method '" . $name . "' does not exists.");
         }
@@ -60,9 +63,47 @@ class Config
     }
 
     /**
+     * @param $name
+     * @return bool
+     */
+    protected function handleHasMethod($name)
+    {
+        $configParam = substr($name, 3);
+        $returnValue = isset($this->configuration[$configParam]);
+
+        return $returnValue;
+    }
+
+    /**
+     * @param string $name
+     * @param array $arguments
+     * @return Config
+     */
+    protected function handleSetterMethod($name, $arguments)
+    {
+        $configParam = substr($name, 3);
+        $this->configuration[$configParam] = (count($arguments) == 1) ? $arguments[0] : $arguments;
+        $this->save();
+
+        return $this;
+    }
+
+    /**
+     * @param string $name
+     * @return null|mixed
+     */
+    protected function handleGetterMethod($name)
+    {
+        $configParam = substr($name, 3);
+        $returnValue = isset($this->configuration[$configParam]) ? $this->configuration[$configParam] : null;
+
+        return $returnValue;
+    }
+
+    /**
      * Save configuration to file
      */
-    public function save()
+    protected function save()
     {
         file_put_contents($this->filepath, serialize($this->configuration));
     }

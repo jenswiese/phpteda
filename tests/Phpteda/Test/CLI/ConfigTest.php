@@ -36,7 +36,6 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function testSavingConfig()
     {
         $this->object->setGeneratorDirectory('generator/test/dir');
-        $this->object->save();
 
         $this->assertTrue($this->filesystem->hasChild('.phpteda'));
         $actualConfiguration = unserialize($this->filesystem->getChild('.phpteda')->getContent());
@@ -51,7 +50,6 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     public function testReadingConfig()
     {
         $this->object->setGeneratorDirectory('generator/test/dir');
-        $this->object->save();
 
         $config = new Config(vfsStream::url('testDir'));
 

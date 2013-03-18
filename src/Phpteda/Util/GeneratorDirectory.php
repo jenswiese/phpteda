@@ -21,7 +21,6 @@ class GeneratorDirectory
      */
     public function __construct($path)
     {
-
         $this->iterator = new GeneratorDirectoryIterator(new DirectoryIterator($path));
     }
 
