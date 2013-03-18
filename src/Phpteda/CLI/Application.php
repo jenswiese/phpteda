@@ -3,6 +3,10 @@
 namespace Phpteda\CLI;
 
 use Symfony\Component\Console\Application as SymfonyApplication;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Command\HelpCommand;
 use Phpteda\CLI\Config;
 
 /**
@@ -34,5 +38,21 @@ class Application extends SymfonyApplication
     public function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * Defines and returns default input definiton
+     *
+     * @return InputDefinition
+     */
+    protected function getDefaultInputDefinition()
+    {
+        return new InputDefinition(
+            array(
+                new InputArgument('command', InputArgument::REQUIRED, 'The command to execute'),
+                new InputOption('--help', '-h', InputOption::VALUE_NONE, 'Display this help message.'),
+                new InputOption('--version', '-V', InputOption::VALUE_NONE, 'Display this application version.'),
+            )
+        );
     }
 }
