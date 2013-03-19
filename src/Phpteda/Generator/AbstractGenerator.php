@@ -11,7 +11,7 @@ use Faker\Generator;
  * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-03-07
  */
-abstract class AbstractGenerator
+abstract class AbstractGenerator implements GeneratorInterface
 {
     /** @var Options */
     protected $options;
