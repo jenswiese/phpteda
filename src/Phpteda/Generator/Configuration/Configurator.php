@@ -79,7 +79,7 @@ class Configurator
     }
 
     /**
-     * @param string fully qualified class name or pathname
+     * @param string fully qualified class-name
      */
     private function __construct($generatorClassName)
     {
