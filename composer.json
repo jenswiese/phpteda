@@ -1,7 +1,7 @@
 {
     "name": "jenswiese/phpteda",
     "description": "Test Data Generation based on Faker",
-    "keywords": ["testdata", ""],
+    "keywords": ["testdata", "test-data generation", "faker", "fake-data"],
     "homepage": "https://github.com/jenswiese/phpteda",
     "license": "MIT",
     "authors": [
