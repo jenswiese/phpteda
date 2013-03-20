@@ -43,13 +43,19 @@ class ShowCommand extends Command
             throw new \RuntimeException("Generator directory is not set. Please run 'init' command first.");
         }
 
-        $output->writeln('Using: ' . $config->getGeneratorDirectory());
+        $output->writeln('<comment>Using:</comment> ' . $config->getGeneratorDirectory());
 
         $iterator = new GeneratorDirectoryIterator(new DirectoryIterator($config->getGeneratorDirectory()));
 
         $table = Table::create($output, 132);
+        $table->addRow()
+            ->addColumn('<comment>Generator</comment>')
+            ->addColumn('<comment>Description</comment>');
+
         foreach ($iterator as $generatorFile) {
-            $table->addRow()->addColumn($generatorFile->getBasename('Generator.php'));
+            $table->addRow()
+                ->addColumn($generatorFile->getBasename('Generator.php'))
+                ->addColumn('Description to come ...');
         }
         $table->end();
     }
