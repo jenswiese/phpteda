@@ -30,5 +30,6 @@
             "Phpteda\\Test\\": "tests/",
             "PhptedaExample": "examples/"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }
