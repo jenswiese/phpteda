@@ -57,7 +57,7 @@ class ConfiguratorProperty
      */
     public function setQuestion($question)
     {
-        $this->question = rtrim($question, '?') . '?';
+        $this->question = rtrim($question, '?');
     }
 
     /**

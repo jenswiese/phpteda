@@ -59,15 +59,16 @@ class Configurator
         }
 
         $fileContent = file_get_contents($pathname);
-        foreach (token_get_all($fileContent) as $token) {
-            if (T_NAMESPACE == $token[0]) {
-                $namespace = $token[1];
-            }
 
-            if (T_CLASS == $token[0]) {
-                $className = $token[1];
-                break;
-            }
+        preg_match('/namespace(\s*)([a-zA-Z\\\\]*)/', $fileContent, $matches);
+        if (isset($matches[2])) {
+            $namespace = trim(trim($matches[2]), '\\');
+        }
+
+        $classPattern = '/class(\s*)([a-zA-Z]*)/';
+        preg_match($classPattern, $fileContent, $matches);
+        if ($matches[2]) {
+            $className = trim($matches[2]);
         }
 
         if (is_null($namespace) || is_null($className)) {
@@ -119,8 +120,7 @@ class Configurator
     public function getConfiguredGenerator()
     {
         $this->configureGenerator();
-
-        return $this->generatorClassName;
+        return $this->configuredGenerator;
     }
 
     /**
@@ -155,6 +155,9 @@ class Configurator
         );
 
         foreach ($methodRetriever->getAllPublicMethods() as $method) {
+            if (!$method->hasDescription()) {
+                continue;
+            }
             $property = new ConfiguratorProperty();
             $property->setName($method->getName());
             $property->setQuestion($method->getDescription());
