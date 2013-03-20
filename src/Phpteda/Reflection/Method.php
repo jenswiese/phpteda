@@ -105,6 +105,14 @@ class Method
     }
 
     /**
+     * @return bool
+     */
+    public function hasDescription()
+    {
+        return !empty($this->description);
+    }
+
+    /**
      * @return string
      */
     public function getDescription()
