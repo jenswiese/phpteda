@@ -3,6 +3,8 @@
 namespace Phpteda\CLI\Command;
 
 use Phpteda\CLI\Helper\Table;
+use Phpteda\Generator\Configuration\Configurator;
+use Phpteda\Generator\GeneratorInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -52,6 +54,28 @@ class GenerateCommand extends Command
             );
         }
 
-        $output->writeln("Processing generator '" . $input->getArgument('generator-file') . "'.");
+        $this->configureGenerator($input->getArgument('generator-file'), $output);
+     }
+
+    protected function configureGenerator($generatorPathname, OutputInterface $output)
+    {
+        $dialog = new DialogHelper();
+        $configurator = new Configurator($generatorPathname);
+
+        foreach ($configurator->getProperties() as $property) {
+            $question = '<question>' . $property->getQuestion() . '</question> ';
+            $defaultValue = false;
+
+            if ($property->isBool()) {
+                $answer = $dialog->askConfirmation($output, $question, $defaultValue);
+            } else {
+                $answer = $dialog->ask($output, $question, $defaultValue);
+            }
+
+            $property->setValue($answer);
+        }
+
+        $generator = $configurator->getConfiguredGenerator();
+        $generator->amount(1);
     }
 }
