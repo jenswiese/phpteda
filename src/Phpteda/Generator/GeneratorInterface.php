@@ -28,4 +28,4 @@ interface GeneratorInterface
      * @return void
      */
     public function amount($amount);
-    }
+}
