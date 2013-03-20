@@ -51,6 +51,7 @@ class Application extends SymfonyApplication
             array(
                 new InputArgument('command', InputArgument::REQUIRED, 'The command to execute'),
                 new InputOption('--help', '-h', InputOption::VALUE_NONE, 'Display this help message.'),
+                new InputOption('--verbose', '-v', InputOption::VALUE_NONE, 'Increase verbosity of messages.'),
                 new InputOption('--version', '-V', InputOption::VALUE_NONE, 'Display this application version.'),
             )
         );
