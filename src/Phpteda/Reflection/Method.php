@@ -65,6 +65,14 @@ class Method
     }
 
     /**
+     * @return bool
+     */
+    public function hasParameter()
+    {
+        return $this->parameterName !== '';
+    }
+
+    /**
      * @return string
      */
     public function getParameterName()

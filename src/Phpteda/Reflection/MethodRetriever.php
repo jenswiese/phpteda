@@ -20,7 +20,7 @@ class MethodRetriever
     protected $annotationReader;
 
     protected static $ignoredMethodNames = array(
-        '__call', 'generate', '__get'
+        '__call', 'generate', '__get', 'amount', 'shouldRemoveExistingData'
     );
 
     /**
@@ -52,7 +52,7 @@ class MethodRetriever
     {
         $methods = array();
 
-        foreach($this->reflectionClass->getMethods($filter) as $reflectionMethod) {
+        foreach ($this->reflectionClass->getMethods($filter) as $reflectionMethod) {
             if ($this->isIgnoredMethodName($reflectionMethod->getName())) {
                 continue;
             }
@@ -80,7 +80,7 @@ class MethodRetriever
             ->setReflectionClass($this->reflectionClass)
             ->getAnnotations('method');
 
-        foreach($magicMethodAnnotations as $methodString) {
+        foreach ($magicMethodAnnotations as $methodString) {
             $method = new Method(
                 $this->annotationReader->parseMagicMethodAnnotation($methodString)
             );
@@ -103,5 +103,4 @@ class MethodRetriever
     {
         return in_array($name, self::$ignoredMethodNames);
     }
-
 }
