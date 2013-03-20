@@ -2,9 +2,10 @@
 
 namespace Phpteda\CLI\Command;
 
+use Phpteda\CLI\Config;
 use Phpteda\CLI\Helper\Table;
 use Phpteda\Generator\Configuration\Configurator;
-use Phpteda\Generator\GeneratorInterface;
+use Phpteda\Generator\Configuration\ConfiguratorProperty;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,6 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\DialogHelper;
 use Phpteda\Util\GeneratorDirectory;
+use InvalidArgumentException;
 
 /**
  * ShowCommand
@@ -25,7 +27,7 @@ class GenerateCommand extends Command
         $this
             ->setName('generate')
             ->addArgument('generator-file', InputArgument::OPTIONAL, 'Which generator?')
-            ->setDescription('Generate test data with given generator files.');
+            ->setDescription('Generate test data with given generator file.');
     }
 
     /**
@@ -36,11 +38,14 @@ class GenerateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!$input->hasArgument('generate-file')) {
-            $this->getApplication()->get('show')->execute($input, $output);
+        $dialog = new DialogHelper();
+        $config = $this->getApplication()->getConfig();
 
-            $dialog = new DialogHelper();
-            $config = $this->getApplication()->getConfig();
+        if (!$input->getArgument('generator-file')) {
+            if ($input->getOption('verbose')) {
+                $this->getApplication()->get('show')->execute($input, $output);
+            }
+
             $generatorDirectory = new GeneratorDirectory($config->getGeneratorDirectory());
 
             $input->setArgument(
@@ -54,21 +59,35 @@ class GenerateCommand extends Command
             );
         }
 
-        $this->configureGenerator($input->getArgument('generator-file'), $output);
-     }
+        if (!$input->getArgument('generator-file')) {
+            throw new InvalidArgumentException('No generator-file provided - giving up.');
+        }
 
-    protected function configureGenerator($generatorPathname, OutputInterface $output)
+        $pathname =
+            $config->getGeneratorDirectory() .
+            DIRECTORY_SEPARATOR .
+                $input->getArgument('generator-file') . 'Generator.php';
+        $this->configureAndRunGenerator($pathname, $output);
+
+        $output->writeln('Finished generation.');
+    }
+
+    protected function configureAndRunGenerator($generatorPathname, OutputInterface $output)
     {
+        $output->writeln("<info>Configuring generator:</info> " . $generatorPathname . "\n");
+
         $dialog = new DialogHelper();
-        $configurator = new Configurator($generatorPathname);
+        $configurator = Configurator::createByGeneratorPathname($generatorPathname);
 
         foreach ($configurator->getProperties() as $property) {
-            $question = '<question>' . $property->getQuestion() . '</question> ';
+            $question = '<question>' . $property->getQuestion() . ' [%s]?</question> ';
             $defaultValue = false;
 
             if ($property->isBool()) {
+                $question = sprintf($question, 'y/N');
                 $answer = $dialog->askConfirmation($output, $question, $defaultValue);
             } else {
+                $question = sprintf($question, '');
                 $answer = $dialog->ask($output, $question, $defaultValue);
             }
 
@@ -76,6 +95,15 @@ class GenerateCommand extends Command
         }
 
         $generator = $configurator->getConfiguredGenerator();
-        $generator->amount(1);
+
+        $amount = $dialog->ask($output, '<question>How many [1]?</question> ', 1, array(10, 100, 1000, 10000));
+        $shouldRemoveExistingData = $dialog->askConfirmation(
+            $output,
+            '<question>Remove existing data [y/N]?</question> ',
+            false
+        );
+
+        $generator->shouldRemoveExistingData($shouldRemoveExistingData);
+//        $generator->amount($amount);
     }
 }
