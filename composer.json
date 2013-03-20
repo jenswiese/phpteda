@@ -1,7 +1,18 @@
 {
     "name": "jenswiese/phpteda",
-    "description": "Test Data Generation",
+    "description": "Test Data Generation based on Faker",
+    "keywords": ["testdata", ""],
+    "homepage": "https://github.com/jenswiese/phpteda",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jens Wiese",
+            "email": "jens@dev.lohering.de",
+            "homepage": "http://www.howtrueisfalse.de"
+        }
+    ],
     "require": {
+        "php": ">=5.3.0",
         "symfony/console": "v2.2.0",
         "fzaninotto/faker": "dev-master",
         "mockery/mockery": "dev-master",
@@ -13,13 +24,6 @@
     "config": {
         "bin-dir": "bin"
     },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Jens Wiese",
-            "email": "jens@dev.lohering.de"
-        }
-    ],
     "autoload": {
         "psr-0": {
             "Phpteda": "src/",
