@@ -16,8 +16,8 @@ class MethodRetriever
     /** @var ReflectionClass */
     protected $reflectionClass;
 
-    /** @var \Phpteda\Reflection\ClassAnnotationReader */
-    protected $annotationReader;
+    /** @var \Phpteda\Reflection\ClassReader */
+    protected $classReader;
 
     protected static $ignoredMethodNames = array(
         '__call', 'generate', '__get', 'amount', 'shouldRemoveExistingData'
@@ -25,12 +25,12 @@ class MethodRetriever
 
     /**
      * @param \ReflectionClass $reflectionClass
-     * @param ClassReader $annotationReader
+     * @param ClassReader $classReader
      */
-    public function __construct(ReflectionClass $reflectionClass, ClassReader $annotationReader)
+    public function __construct(ReflectionClass $reflectionClass, ClassReader $classReader)
     {
         $this->reflectionClass = $reflectionClass;
-        $this->annotationReader = $annotationReader;
+        $this->classReader = $classReader;
     }
 
     /**
@@ -76,11 +76,11 @@ class MethodRetriever
     {
         $methods = array();
 
-        $magicMethodAnnotations = $this->annotationReader->getAnnotations('method');
+        $magicMethodAnnotations = $this->classReader->getAnnotations('method');
 
         foreach ($magicMethodAnnotations as $methodString) {
             $method = new Method(
-                $this->annotationReader->parseMagicMethodAnnotation($methodString)
+                $this->classReader->parseMagicMethodAnnotation($methodString)
             );
 
             if ($this->isIgnoredMethodName($method->getName())) {

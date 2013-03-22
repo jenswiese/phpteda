@@ -14,8 +14,8 @@ class MethodRetrieverTest extends \PHPUnit_Framework_TestCase
     /** @var \Mockery\MockInterface | ReflectionClass */
     protected $reflectionClass;
 
-    /** @var \Mockery\MockInterface | \Phpteda\Reflection\ClassAnnotationReader */
-    protected $annotationReader;
+    /** @var \Mockery\MockInterface | \Phpteda\Reflection\ClassReader */
+    protected $classReader;
 
 
     protected function setUp()
@@ -27,11 +27,9 @@ class MethodRetrieverTest extends \PHPUnit_Framework_TestCase
         $this->reflectionClass = Mockery::mock('\ReflectionClass')->shouldIgnoreMissing();
         $this->reflectionClass->shouldReceive('getMethods')->andReturn(array($this->reflectionMethod));
 
-        $this->annotationReader = Mockery::mock('\Phpteda\Reflection\ClassAnnotationReader')->shouldIgnoreMissing();
-        $this->annotationReader
-            ->shouldReceive('setReflectionClass->getAnnotations')
-            ->andReturn(array('method' => 'method string foo'));
-        $this->annotationReader->shouldReceive('parseMagicMethodAnnotation')->andReturn(
+        $this->classReader = Mockery::mock('\Phpteda\Reflection\ClassReader')->shouldIgnoreMissing();
+        $this->classReader->shouldReceive('getAnnotations')->andReturn(array('method' => 'method string foo'));
+        $this->classReader->shouldReceive('parseMagicMethodAnnotation')->andReturn(
             array(
                 'returnType' => 'returnType',
                 'name' => 'magicMethodName',
@@ -52,7 +50,7 @@ class MethodRetrieverTest extends \PHPUnit_Framework_TestCase
     {
         $retriever = new MethodRetriever(
             $this->reflectionClass,
-            $this->annotationReader
+            $this->classReader
         );
 
         $actualMethods = $retriever->getAllPublicMethods();

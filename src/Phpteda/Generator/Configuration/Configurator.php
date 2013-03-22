@@ -158,8 +158,7 @@ class Configurator
     protected function configureGenerator()
     {
         $this->configuredGenerator = call_user_func(
-            array($this->generatorClassName, 'generate'),
-            FakerFactory::create()
+            array($this->generatorClassName, 'generate')
         );
 
         foreach ($this->properties as $property) {

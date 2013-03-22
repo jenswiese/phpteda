@@ -41,15 +41,14 @@ abstract class AbstractGenerator implements GeneratorInterface
     {
         if (is_null($faker)) {
             $faker = Factory::create('de_DE');
-            $providers = $this->getProvidersByAnnotation();
+        }
 
-            foreach ($providers as $providerClass) {
-                if (!class_exists($providerClass)) {
-                    throw new \InvalidArgumentException("Provider '" . $providerClass . "' does not exist.");
-                }
-
-                $faker->addProvider(new $providerClass($faker));
+        foreach ($this->getProvidersByAnnotation() as $providerClass) {
+            if (!class_exists($providerClass)) {
+                throw new \InvalidArgumentException("Provider '" . $providerClass . "' does not exist.");
             }
+
+            $faker->addProvider(new $providerClass($faker));
         }
 
         $this->faker = $faker;
