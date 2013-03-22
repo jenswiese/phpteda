@@ -74,20 +74,21 @@ class GenerateCommand extends Command
 
     protected function configureAndRunGenerator($generatorPathname, OutputInterface $output)
     {
-        $output->writeln("<info>Configuring generator:</info> " . $generatorPathname . "\n");
+        $output->writeln('');
+        $output->writeln("<info>Configuring generator:</info> " . $generatorPathname);
 
         $dialog = new DialogHelper();
         $configurator = Configurator::createByGeneratorPathname($generatorPathname);
 
         foreach ($configurator->getProperties() as $property) {
-            $question = '<question>' . $property->getQuestion() . ' [%s]?</question> ';
+            $question = '<question>' . $property->getQuestion() . ' %s</question> ';
             $defaultValue = false;
 
             if ($property->isBool()) {
-                $question = sprintf($question, 'y/N');
+                $question = sprintf($question, '[y/N]?');
                 $answer = $dialog->askConfirmation($output, $question, $defaultValue);
             } else {
-                $question = sprintf($question, '');
+                $question = sprintf($question, '[]:');
                 $answer = $dialog->ask($output, $question, $defaultValue);
             }
 
@@ -96,7 +97,7 @@ class GenerateCommand extends Command
 
         $generator = $configurator->getConfiguredGenerator();
 
-        $amount = $dialog->ask($output, '<question>How many [1]?</question> ', 1, array(10, 100, 1000, 10000));
+        $amount = $dialog->ask($output, '<question>How many [1]?</question> ', 1);
         $shouldRemoveExistingData = $dialog->askConfirmation(
             $output,
             '<question>Remove existing data [y/N]?</question> ',
@@ -104,6 +105,6 @@ class GenerateCommand extends Command
         );
 
         $generator->shouldRemoveExistingData($shouldRemoveExistingData);
-//        $generator->amount($amount);
+        $generator->amount($amount);
     }
 }

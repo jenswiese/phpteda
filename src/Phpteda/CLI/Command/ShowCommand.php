@@ -3,6 +3,7 @@
 namespace Phpteda\CLI\Command;
 
 use Phpteda\CLI\Helper\Table;
+use Phpteda\Reflection\ClassReader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -47,10 +48,10 @@ class ShowCommand extends Command
 
         $iterator = new GeneratorDirectoryIterator(new DirectoryIterator($config->getGeneratorDirectory()));
 
-        $table = Table::create($output, 132);
-        $table->addRow()
-            ->addColumn('<comment>Generator</comment>')
-            ->addColumn('<comment>Description</comment>');
+        $table = Table::create($output, 132)
+            ->addRow()
+                ->addColumn('<comment>Generator</comment>')
+                ->addColumn('<comment>Description</comment>');
 
         foreach ($iterator as $generatorFile) {
             $table->addRow()
