@@ -17,6 +17,10 @@ class ClassReaderTest extends \PHPUnit_Framework_TestCase
         $expectedAnnotations = array(
             'author' => array('Jens Wiese'),
             'since' => array('1.0.0'),
+            'fakerProvider' => array(
+                '\path\to\customProviderOne',
+                '\path\to\customProviderTwo'
+            ),
             'method' => array(
                 'string getName() Returns a name',
                 'string parseName(string $name) Parses name'
