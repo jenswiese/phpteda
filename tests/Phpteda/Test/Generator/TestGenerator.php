@@ -12,6 +12,8 @@ use Phpteda\Generator\AbstractGenerator;
  * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-03-10
  *
+ * @fakerProvider \Phpteda\Test\Generator\TestFakerProvider
+ *
  * @method TestGenerator isActive() Should entries be active
  * @method TestGenerator withValue($value) Provide value
  */

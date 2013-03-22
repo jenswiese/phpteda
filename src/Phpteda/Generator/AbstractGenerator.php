@@ -4,6 +4,8 @@ namespace Phpteda\Generator;
 
 use Faker\Factory;
 use Faker\Generator;
+use Phpteda\Reflection\ClassReader;
+use Zend\File\Transfer\Exception\InvalidArgumentException;
 
 /**
  * Abstract base class for custom generator classes
@@ -23,19 +25,33 @@ abstract class AbstractGenerator implements GeneratorInterface
     protected $shouldRemoveExistingData = false;
 
     /**
-     * @param \Faker\Generator $faker
+     * @param Generator $faker
      * @return AbstractGenerator
      */
-    public static function generate(Generator $faker)
+    public static function generate(Generator $faker = null)
     {
         return new static($faker);
     }
 
     /**
-     * @param \Faker\Generator $faker
+     * @param Generator $faker
+     * @throws \InvalidArgumentException
      */
-    protected function __construct(Generator $faker)
+    protected function __construct(Generator $faker = null)
     {
+        if (is_null($faker)) {
+            $faker = Factory::create('de_DE');
+            $providers = $this->getProvidersByAnnotation();
+
+            foreach ($providers as $providerClass) {
+                if (!class_exists($providerClass)) {
+                    throw new \InvalidArgumentException("Provider '" . $providerClass . "' does not exist.");
+                }
+
+                $faker->addProvider(new $providerClass($faker));
+            }
+        }
+
         $this->faker = $faker;
         $this->options = new Options();
     }
@@ -59,7 +75,7 @@ abstract class AbstractGenerator implements GeneratorInterface
 
     /**
      * Enables removing of existing data
-     * @return AbstractGenerator
+     * @return $this|GeneratorInterface
      */
     public function shouldRemoveExistingData()
     {
@@ -98,6 +114,35 @@ abstract class AbstractGenerator implements GeneratorInterface
         }
 
         return false;
+    }
+
+    /**
+     * @return Generator
+     */
+    public function getFaker()
+    {
+        return $this->faker;
+    }
+
+    /**
+     * @return string[]
+     */
+    protected function getProvidersByAnnotation()
+    {
+        $classReader = new ClassReader(get_called_class());
+        return $classReader->getAnnotations('fakerProvider');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getLocaleByAnnotation()
+    {
+        $classReader = new ClassReader(get_called_class());
+        $annotatedLocale = $classReader->getAnnotations('fakerLocale');
+        $locale = empty($annotatedLocale) ? 'en_EN' : $annotatedLocale;
+
+        return $locale;
     }
 
     /**

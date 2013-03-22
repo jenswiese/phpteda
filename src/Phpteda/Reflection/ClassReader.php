@@ -143,7 +143,7 @@ class ClassReader
             $annotations[$name][] = $value;
         }
 
-        if (!is_null($annotation)) {
+        if (!is_null($annotation) && isset($annotations[$annotation])) {
             $annotations = $annotations[$annotation];
         }
 

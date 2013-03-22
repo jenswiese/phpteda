@@ -17,6 +17,7 @@ class ClassReaderTest extends \PHPUnit_Framework_TestCase
         $expectedAnnotations = array(
             'author' => array('Jens Wiese'),
             'since' => array('1.0.0'),
+            'fakerLocale' => array('de_DE'),
             'fakerProvider' => array(
                 '\path\to\customProviderOne',
                 '\path\to\customProviderTwo'

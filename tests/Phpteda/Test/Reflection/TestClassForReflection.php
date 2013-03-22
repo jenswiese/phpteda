@@ -9,9 +9,10 @@ namespace Phpteda\Test\Reflection;
  * @author Jens Wiese
  * @since 1.0.0
  *
+ * @fakerLocale de_DE
  * @fakerProvider \path\to\customProviderOne
  * @fakerProvider \path\to\customProviderTwo
- * 
+ *
  * @method string getName() Returns a name
  * @method string parseName(string $name) Parses name
  */
