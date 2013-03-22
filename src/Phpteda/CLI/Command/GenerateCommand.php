@@ -104,7 +104,10 @@ class GenerateCommand extends Command
             false
         );
 
-        $generator->shouldRemoveExistingData($shouldRemoveExistingData);
+        if ($shouldRemoveExistingData) {
+            $generator->shouldRemoveExistingData();
+        }
+
         $generator->amount($amount);
     }
 }
