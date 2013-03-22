@@ -11,9 +11,7 @@ class ClassReaderTest extends \PHPUnit_Framework_TestCase
 {
     public function testRetrievingAllClassAnnotations()
     {
-        $classReader = new ClassReader(
-            new \ReflectionClass('Phpteda\Test\Reflection\TestClassForReflection')
-        );
+        $classReader = new ClassReader('Phpteda\Test\Reflection\TestClassForReflection');
 
         $actualAnnotations = $classReader->getAnnotations();
         $expectedAnnotations = array(
@@ -30,9 +28,7 @@ class ClassReaderTest extends \PHPUnit_Framework_TestCase
 
     public function testRetrievingSpecificClassAnnotations()
     {
-        $classReader = new ClassReader(
-            new \ReflectionClass('Phpteda\Test\Reflection\TestClassForReflection')
-        );
+        $classReader = new ClassReader('Phpteda\Test\Reflection\TestClassForReflection');
 
         $actualAnnotation = $classReader->getAnnotations('author');
         $expectedAnnotation = array('Jens Wiese');
@@ -78,9 +74,7 @@ class ClassReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testParseMagicMethodAnnotation($methodString, $expectedString)
     {
-        $classReader = new ClassReader(
-            new \ReflectionClass('Phpteda\Test\Reflection\TestClassForReflection')
-        );
+        $classReader = new ClassReader('Phpteda\Test\Reflection\TestClassForReflection');
         $methodParts = $classReader->parseMagicMethodAnnotation($methodString);
         $actualString = implode(',', $methodParts);
 
@@ -89,9 +83,7 @@ class ClassReaderTest extends \PHPUnit_Framework_TestCase
 
     public function testRetrievingClassDescription()
     {
-        $classReader = new ClassReader(
-            new \ReflectionClass('Phpteda\Test\Reflection\TestClassForReflection')
-        );
+        $classReader = new ClassReader('Phpteda\Test\Reflection\TestClassForReflection');
 
         $actualDescription = $classReader->getDescription();
         $expectedDescription = 'This is a test class for class reflection, nothing more, nothing less';

@@ -17,22 +17,64 @@ class ClassReader
     protected $reflectionClass;
 
     /**
-     * @param \ReflectionClass $reflectionClass
+     * @param $className
      */
-    public function __construct(ReflectionClass $reflectionClass = null)
+    public function __construct($className)
     {
-        $this->reflectionClass = $reflectionClass;
+        $this->reflectionClass = new ReflectionClass($className);
     }
 
     /**
-     * @param \ReflectionClass $reflectionClass
-     * @return ClassAnnotationReader
+     * @param $pathname
+     * @return ClassReader
+     * @throws RuntimeException
+     * @throws InvalidArgumentException
      */
-    public function setReflectionClass($reflectionClass)
+    public static function createByPathname($pathname)
     {
-        $this->reflectionClass = $reflectionClass;
+        if (!file_exists($pathname)) {
+            throw new InvalidArgumentException("Pathname '" . $pathname . "' does not exist.");
+        }
 
-        return $this;
+        $fileContent = file_get_contents($pathname);
+
+        $namespacePattern = '/namespace(\s*)([a-zA-Z\\\\]*)/';
+        preg_match($namespacePattern, $fileContent, $matches);
+        if (isset($matches[2])) {
+            $namespace = trim(trim($matches[2]), '\\');
+        }
+
+        $classPattern = '/class(\s*)([a-zA-Z]*)/';
+        preg_match($classPattern, $fileContent, $matches);
+        if ($matches[2]) {
+            $className = trim($matches[2]);
+        }
+
+        if (is_null($namespace) || is_null($className)) {
+            throw new RuntimeException("File does not contain namespace or class-name.");
+        }
+
+        return new self($namespace . '\\' .  $className);
+    }
+
+    /**
+     * Returns fully qualified name
+     *
+     * @return string
+     */
+    public function getNamespaceName()
+    {
+        return $this->reflectionClass->getNamespaceName();
+    }
+
+    /**
+     * Returns class-name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->reflectionClass->getName();
     }
 
     /**

@@ -5,6 +5,7 @@ namespace Phpteda\Generator\Configuration;
 use Phpteda\Generator\GeneratorInterface;
 use InvalidArgumentException;
 use Phpteda\Reflection\ClassAnnotationReader;
+use Phpteda\Reflection\ClassReader;
 use Phpteda\Reflection\MethodRetriever;
 use RuntimeException;
 use ReflectionClass;
@@ -54,28 +55,9 @@ class Configurator
      */
     public static function createByGeneratorPathname($pathname)
     {
-        if (!file_exists($pathname)) {
-            throw new InvalidArgumentException("Generator pathname '" . $pathname . "' does not exist.");
-        }
+        $classReader = ClassReader::createByPathname($pathname);
 
-        $fileContent = file_get_contents($pathname);
-
-        preg_match('/namespace(\s*)([a-zA-Z\\\\]*)/', $fileContent, $matches);
-        if (isset($matches[2])) {
-            $namespace = trim(trim($matches[2]), '\\');
-        }
-
-        $classPattern = '/class(\s*)([a-zA-Z]*)/';
-        preg_match($classPattern, $fileContent, $matches);
-        if ($matches[2]) {
-            $className = trim($matches[2]);
-        }
-
-        if (is_null($namespace) || is_null($className)) {
-            throw new RuntimeException("File does not contain namespace or class-name.");
-        }
-
-        return self::createByGeneratorClassName($namespace . '\\' .  $className);
+        return self::createByGeneratorClassName($classReader->getNamespaceName());
     }
 
     /**
