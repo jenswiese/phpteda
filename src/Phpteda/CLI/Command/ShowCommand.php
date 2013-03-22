@@ -54,9 +54,11 @@ class ShowCommand extends Command
                 ->addColumn('<comment>Description</comment>');
 
         foreach ($iterator as $generatorFile) {
+            $description = ClassReader::createByPathname($generatorFile->getPathname())->getDescription();
+
             $table->addRow()
                 ->addColumn($generatorFile->getBasename('Generator.php'))
-                ->addColumn('Description to come ...');
+                ->addColumn($description);
         }
         $table->end();
     }

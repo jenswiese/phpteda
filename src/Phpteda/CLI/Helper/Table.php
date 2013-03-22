@@ -110,7 +110,29 @@ class Table
         $this->columnWidth = floor($this->width / $this->columnCount) - ($this->columnCount==1 ? 2 : 1);
 
         $this->outputBorder();
-        $this->outputContent();
+
+        $maxContentLengthPerColumn = ($this->columnWidth - 4);
+        $columnRows = array();
+        $maxRowCount = 1;
+        foreach ($this->columns as $columnNum => $columnValue) {
+            $columnRows[$columnNum] = explode(
+                '%%',
+                wordwrap($columnValue, $maxContentLengthPerColumn, '%%', true)
+            );
+            $currentCount = count($columnRows[$columnNum]);
+            $maxRowCount = ($maxRowCount < $currentCount) ? $currentCount : $maxRowCount;
+        }
+
+        for ($row = 0; $row < $maxRowCount; $row++) {
+            for ($column = 0; $column < $this->columnCount; $column++) {
+                if (isset($columnRows[$column][$row])) {
+                    $this->columns[$column] = $columnRows[$column][$row];
+                } else {
+                    $this->columns[$column] = '';
+                }
+            }
+            $this->outputContent();
+        }
 
         $this->columns = array();
         $this->lastColumnCount = $this->columnCount;
