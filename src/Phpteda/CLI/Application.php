@@ -26,7 +26,7 @@ class Application extends SymfonyApplication
     public function __construct(Config $config)
     {
         $name = "Phpteda";
-        $version = "0.1-dev";
+        $version = "0.9-dev";
         $this->config = $config;
 
         parent::__construct($name, $version);

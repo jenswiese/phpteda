@@ -3,7 +3,7 @@
 namespace Phpteda\Reflection;
 
 use ReflectionClass;
-use Phpteda\Reflection\ClassAnnotationReader;
+use Phpteda\Reflection\ClassReader;
 
 /**
  * Class for retrieving methods from given Generator class
@@ -25,9 +25,9 @@ class MethodRetriever
 
     /**
      * @param \ReflectionClass $reflectionClass
-     * @param ClassAnnotationReader $annotationReader
+     * @param ClassReader $annotationReader
      */
-    public function __construct(ReflectionClass $reflectionClass, ClassAnnotationReader $annotationReader)
+    public function __construct(ReflectionClass $reflectionClass, ClassReader $annotationReader)
     {
         $this->reflectionClass = $reflectionClass;
         $this->annotationReader = $annotationReader;
@@ -76,9 +76,7 @@ class MethodRetriever
     {
         $methods = array();
 
-        $magicMethodAnnotations = $this->annotationReader
-            ->setReflectionClass($this->reflectionClass)
-            ->getAnnotations('method');
+        $magicMethodAnnotations = $this->annotationReader->getAnnotations('method');
 
         foreach ($magicMethodAnnotations as $methodString) {
             $method = new Method(

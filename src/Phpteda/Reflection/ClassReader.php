@@ -46,12 +46,12 @@ class ClassReader
 
         $classPattern = '/class(\s*)([a-zA-Z]*)/';
         preg_match($classPattern, $fileContent, $matches);
-        if ($matches[2]) {
+        if (isset($matches[2])) {
             $className = trim($matches[2]);
         }
 
-        if (is_null($namespace) || is_null($className)) {
-            throw new RuntimeException("File does not contain namespace or class-name.");
+        if (!isset($namespace) || !isset($className)) {
+            throw new \RuntimeException("File '" . $pathname . "' does not contain namespace or class-name.");
         }
 
         return new self($namespace . '\\' .  $className);
