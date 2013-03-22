@@ -6,12 +6,12 @@ use ReflectionClass;
 use OutOfBoundsException;
 
 /**
- * Class for ...
+ * Class for retrieving infos about class (e.g. annotations, description)
  *
  * @author jens
  * @since 2013-03-11
  */
-class ClassAnnotationReader
+class ClassReader
 {
     /** @var ReflectionClass */
     protected $reflectionClass;
@@ -33,6 +33,45 @@ class ClassAnnotationReader
         $this->reflectionClass = $reflectionClass;
 
         return $this;
+    }
+
+    /**
+     * Retrieves the description of class
+     *
+     * @return string
+     * @throws OutOfBoundsException
+     */
+    public function getDescription()
+    {
+        if (is_null($this->reflectionClass)) {
+            throw new OutOfBoundsException('ReflectionClass is not set.');
+        }
+
+        $pattern = "/\/[\*]{2}([.\n\s\])*([a-zA-Z1-9,\.\?\!\s]*)([\n\s]*)\@/";
+        preg_match_all(
+            $pattern,
+            $this->reflectionClass->getDocComment(),
+            $matches,
+            PREG_SET_ORDER
+        );
+
+        $description = isset($matches[0][1]) ? $matches[0][1] : '';
+
+        if (!empty($description)) {
+            $description = str_replace(array('*'), '', $description);
+            $lines = explode(PHP_EOL, $description);
+            $lines = array_map(
+                function ($value) {
+                    $value = trim($value);
+                    return !empty($value) ? $value : false;
+                },
+                $lines
+            );
+
+            $description = trim(implode(' ', $lines));
+        }
+
+        return $description;
     }
 
     /**
@@ -68,7 +107,6 @@ class ClassAnnotationReader
 
         return $annotations;
     }
-
 
     /**
      * Returns infos about magic method as array

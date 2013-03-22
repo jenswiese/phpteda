@@ -3,7 +3,8 @@
 namespace Phpteda\Test\Reflection;
 
 /**
- * This is a test class for class reflection, nothing more, nothing less
+ * This is a test class for class reflection,
+ * nothing more, nothing less
  *
  * @author Jens Wiese
  * @since 1.0.0
