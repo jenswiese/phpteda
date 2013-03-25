@@ -4,7 +4,7 @@ namespace Phpteda\Generator;
 
 use Faker\Factory;
 use Faker\Generator;
-use Phpteda\Reflection\ClassReader;
+use Phpteda\Reflection\ReflectionClass;
 use Zend\File\Transfer\Exception\InvalidArgumentException;
 
 /**
@@ -128,7 +128,7 @@ abstract class AbstractGenerator implements GeneratorInterface
      */
     protected function getProvidersByAnnotation()
     {
-        $classReader = new ClassReader(get_called_class());
+        $classReader = new ReflectionClass(get_called_class());
         return $classReader->getAnnotations('fakerProvider');
     }
 
@@ -137,7 +137,7 @@ abstract class AbstractGenerator implements GeneratorInterface
      */
     protected function getLocaleByAnnotation()
     {
-        $classReader = new ClassReader(get_called_class());
+        $classReader = new ReflectionClass(get_called_class());
         $annotatedLocale = $classReader->getAnnotations('fakerLocale');
         $locale = empty($annotatedLocale) ? 'en_EN' : $annotatedLocale;
 

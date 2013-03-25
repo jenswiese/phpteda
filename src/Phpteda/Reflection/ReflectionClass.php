@@ -2,8 +2,9 @@
 
 namespace Phpteda\Reflection;
 
-use ReflectionClass;
 use OutOfBoundsException;
+use InvalidArgumentException;
+use RuntimeException;
 
 /**
  * Class for retrieving infos about class (e.g. annotations, description)
@@ -11,22 +12,34 @@ use OutOfBoundsException;
  * @author jens
  * @since 2013-03-11
  */
-class ClassReader
+class ReflectionClass
 {
     /** @var ReflectionClass */
     protected $reflectionClass;
+
+    /** @var AnnotationReader */
+    protected $annotationReader;
 
     /**
      * @param $className
      */
     public function __construct($className)
     {
-        $this->reflectionClass = new ReflectionClass($className);
+        $this->reflectionClass = new \ReflectionClass($className);
+        $this->annotationReader = new AnnotationReader();
+    }
+
+    /**
+     * @param AnnotationReader $reader
+     */
+    public function setAnnotationReader(AnnotationReader $reader)
+    {
+        $this->annotationReader = $reader;
     }
 
     /**
      * @param $pathname
-     * @return ClassReader
+     * @return ReflectionClass
      * @throws RuntimeException
      * @throws InvalidArgumentException
      */
@@ -55,6 +68,15 @@ class ClassReader
         }
 
         return new self($namespace . '\\' .  $className);
+    }
+
+    /**
+     * @param string $filter (e.g. ReflectionMethod::IS_PUBLIC)
+     * @return ReflectionMethod[]
+     */
+    public function getMethods($filter = null)
+    {
+        return $this->reflectionClass->getMethods($filter);
     }
 
     /**
@@ -89,31 +111,9 @@ class ClassReader
             throw new OutOfBoundsException('ReflectionClass is not set.');
         }
 
-        $pattern = "/\/[\*]{2}([.\n\s\])*([a-zA-Z1-9,\.\?\!\s]*)([\n\s]*)\@/";
-        preg_match_all(
-            $pattern,
-            $this->reflectionClass->getDocComment(),
-            $matches,
-            PREG_SET_ORDER
+        return $this->annotationReader->getDescription(
+            $this->reflectionClass->getDocComment()
         );
-
-        $description = isset($matches[0][1]) ? $matches[0][1] : '';
-
-        if (!empty($description)) {
-            $description = str_replace(array('*'), '', $description);
-            $lines = explode(PHP_EOL, $description);
-            $lines = array_map(
-                function ($value) {
-                    $value = trim($value);
-                    return !empty($value) ? $value : false;
-                },
-                $lines
-            );
-
-            $description = trim(implode(' ', $lines));
-        }
-
-        return $description;
     }
 
     /**
@@ -127,27 +127,10 @@ class ClassReader
             throw new OutOfBoundsException('ReflectionClass is not set.');
         }
 
-        $pattern = is_null($annotation) ? "/\@([a-zA-Z1-9]*) (.*)/" : "/\@(" . $annotation . ") (.*)/";
-        preg_match_all(
-            $pattern,
+        return $this->annotationReader->getAnnotations(
             $this->reflectionClass->getDocComment(),
-            $matches,
-            PREG_SET_ORDER
+            $annotation
         );
-
-        $annotations = array();
-        foreach ($matches as $match) {
-            $name = $match[1];
-            $value = $match[2];
-
-            $annotations[$name][] = $value;
-        }
-
-        if (!is_null($annotation) && isset($annotations[$annotation])) {
-            $annotations = $annotations[$annotation];
-        }
-
-        return $annotations;
     }
 
     /**
@@ -168,26 +151,6 @@ class ClassReader
      */
     public function parseMagicMethodAnnotation($methodString)
     {
-        $returnTypePattern = "^(.*\ )?";
-        $parameterPattern = "(.*\ )?(.*)";
-        $methodPattern = "(([a-zA-Z1-9]*)\(" . $parameterPattern . "\))";
-        $descriptionPattern = "(.*)?";
-        $pattern = "/" . $returnTypePattern . $methodPattern . $descriptionPattern . "/";
-
-        preg_match_all($pattern, $methodString, $matches, PREG_SET_ORDER);
-
-        $returnType = trim($matches[0][1]);
-        $methodName = trim($matches[0][3]);
-        $parameterType = trim($matches[0][4]);
-        $parameterName = trim(str_replace('$', '', $matches[0][5]));
-        $description = trim($matches[0][6]);
-
-        return array(
-            'returnType' => $returnType,
-            'name' => $methodName,
-            'parameterType' => $parameterType,
-            'parameterName' => $parameterName,
-            'description' => $description
-        );
+        $this->annotationReader->parseMagicMethodAnnotation($methodString);
     }
 }

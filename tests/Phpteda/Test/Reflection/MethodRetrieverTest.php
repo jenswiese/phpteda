@@ -14,7 +14,7 @@ class MethodRetrieverTest extends \PHPUnit_Framework_TestCase
     /** @var \Mockery\MockInterface | ReflectionClass */
     protected $reflectionClass;
 
-    /** @var \Mockery\MockInterface | \Phpteda\Reflection\ClassReader */
+    /** @var \Mockery\MockInterface | \Phpteda\Reflection\ReflectionClass */
     protected $classReader;
 
 

@@ -2,8 +2,7 @@
 
 namespace Phpteda\Reflection;
 
-use ReflectionClass;
-use Phpteda\Reflection\ClassReader;
+use Phpteda\Reflection\ReflectionClass;
 
 /**
  * Class for retrieving methods from given Generator class
@@ -13,24 +12,19 @@ use Phpteda\Reflection\ClassReader;
  */
 class MethodRetriever
 {
-    /** @var ReflectionClass */
+    /** @var \Phpteda\Reflection\ReflectionClass */
     protected $reflectionClass;
-
-    /** @var \Phpteda\Reflection\ClassReader */
-    protected $classReader;
 
     protected static $ignoredMethodNames = array(
         '__call', 'generate', '__get', 'amount', 'shouldRemoveExistingData'
     );
 
     /**
-     * @param \ReflectionClass $reflectionClass
-     * @param ClassReader $classReader
+     * @param ReflectionClass $reflectionClass
      */
-    public function __construct(ReflectionClass $reflectionClass, ClassReader $classReader)
+    public function __construct(ReflectionClass $reflectionClass)
     {
         $this->reflectionClass = $reflectionClass;
-        $this->classReader = $classReader;
     }
 
     /**
@@ -76,11 +70,11 @@ class MethodRetriever
     {
         $methods = array();
 
-        $magicMethodAnnotations = $this->classReader->getAnnotations('method');
+        $magicMethodAnnotations = $this->reflectionClass->getAnnotations('method');
 
         foreach ($magicMethodAnnotations as $methodString) {
             $method = new Method(
-                $this->classReader->parseMagicMethodAnnotation($methodString)
+                $this->reflectionClass->parseMagicMethodAnnotation($methodString)
             );
 
             if ($this->isIgnoredMethodName($method->getName())) {

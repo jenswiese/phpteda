@@ -3,7 +3,7 @@
 namespace Phpteda\CLI\Command;
 
 use Phpteda\CLI\Helper\Table;
-use Phpteda\Reflection\ClassReader;
+use Phpteda\Reflection\ReflectionClass;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -54,7 +54,7 @@ class ShowCommand extends Command
                 ->addColumn('<comment>Description</comment>');
 
         foreach ($iterator as $generatorFile) {
-            $description = ClassReader::createByPathname($generatorFile->getPathname())->getDescription();
+            $description = ReflectionClass::createByPathname($generatorFile->getPathname())->getDescription();
 
             $table->addRow()
                 ->addColumn($generatorFile->getBasename('Generator.php'))

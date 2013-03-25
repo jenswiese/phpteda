@@ -4,7 +4,7 @@ namespace Phpteda\Generator\Configuration;
 
 use Phpteda\Generator\GeneratorInterface;
 use InvalidArgumentException;
-use Phpteda\Reflection\ClassReader;
+use Phpteda\Reflection\ReflectionClass;
 use Phpteda\Reflection\MethodRetriever;
 use RuntimeException;
 use ReflectionClass;
@@ -54,7 +54,7 @@ class Configurator
      */
     public static function createByGeneratorPathname($pathname)
     {
-        $classReader = ClassReader::createByPathname($pathname);
+        $classReader = ReflectionClass::createByPathname($pathname);
 
         return self::createByGeneratorClassName($classReader->getName());
     }
@@ -132,7 +132,7 @@ class Configurator
 
         $methodRetriever = new MethodRetriever(
             new ReflectionClass($this->generatorClassName),
-            new ClassReader($this->generatorClassName)
+            new ReflectionClass($this->generatorClassName)
         );
 
         foreach ($methodRetriever->getAllPublicMethods() as $method) {
