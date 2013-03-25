@@ -10,16 +10,26 @@ namespace Phpteda\Reflection;
  */
 class AnnotationReader
 {
+    /** @var string */
+    protected $docComment;
+
     /**
      * @param string $docComment
+     */
+    public function __construct($docComment)
+    {
+        $this->docComment = $docComment;
+    }
+
+    /**
      * @return string
      */
-    public function getDescription($docComment)
+    public function getDescription()
     {
         $pattern = "/\/[\*]{2}([.\n\s\])*([a-zA-Z1-9,\.\?\!\s]*)([\n\s]*)\@/";
         preg_match_all(
             $pattern,
-            $docComment,
+            $this->docComment,
             $matches,
             PREG_SET_ORDER
         );
@@ -45,16 +55,15 @@ class AnnotationReader
     }
 
     /**
-     * @param string $docComment
      * @param $annotation
      * @return array
      */
-    public function getAnnotations($docComment, $annotation = null)
+    public function getAnnotations($annotation = null)
     {
         $pattern = is_null($annotation) ? "/\@([a-zA-Z1-9]*) (.*)/" : "/\@(" . $annotation . ") (.*)/";
         preg_match_all(
             $pattern,
-            $docComment,
+            $this->docComment,
             $matches,
             PREG_SET_ORDER
         );
@@ -72,6 +81,22 @@ class AnnotationReader
         }
 
         return $annotations;
+    }
+
+    /**
+     * @return array
+     */
+    public function getSelectableMethodAnnotations()
+    {
+        return $this->getAnnotationsByTagName('select', 'method');
+    }
+
+    /**
+     * @return array
+     */
+    public function getGroupedMethodAnnotations()
+    {
+        return $this->getAnnotationsByTagName('group', 'method');
     }
 
     /**
@@ -112,6 +137,32 @@ class AnnotationReader
             'parameterType' => $parameterType,
             'parameterName' => $parameterName,
             'description' => $description
+        );
+    }
+
+    /**
+     * @param $tagName
+     * @return array
+     */
+    protected function getAnnotationsByTagName($tagName, $annotation = null)
+    {
+        $pattern = '#<'.$tagName.'(?:\s+[^>]+)?>(.*?)</'.$tagName.'>#s';
+        preg_match_all(
+            $pattern,
+            $this->docComment,
+            $matches,
+            PREG_SET_ORDER
+        );
+
+        foreach ($matches as $match) {
+            $annotationReader = new AnnotationReader($match[1]);
+            $annotations[] = $annotationReader->getAnnotations($annotation);
+        }
+
+        return array(
+            $tagName => array(
+                $annotations
+            )
         );
     }
 }

@@ -26,7 +26,8 @@ class ReflectionClass
     public function __construct($className)
     {
         $this->reflectionClass = new \ReflectionClass($className);
-        $this->annotationReader = new AnnotationReader();
+        $this->annotationReader = new AnnotationReader($this->reflectionClass->getDocComment());
+
     }
 
     /**

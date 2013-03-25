@@ -15,6 +15,18 @@ namespace Phpteda\Test\Reflection;
  *
  * @method string getName() Returns a name
  * @method string parseName(string $name) Parses name
+ *
+ * <group name="Job approved status">
+ * @method string approvedJobs() Returns a name
+ * @method string rejectedJobs() Returns a name
+ * </group>
+ *
+ * <option name="Job approved status">
+ * @method string approvedJobsX() Returns a name
+ * @method string rejectedJobsY() Returns a name
+ * </option>
+ *
+ *
  */
 class TestClassForReflection
 {
