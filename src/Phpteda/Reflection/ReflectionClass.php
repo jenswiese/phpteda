@@ -2,7 +2,6 @@
 
 namespace Phpteda\Reflection;
 
-use OutOfBoundsException;
 use InvalidArgumentException;
 use RuntimeException;
 
@@ -14,7 +13,7 @@ use RuntimeException;
  */
 class ReflectionClass
 {
-    /** @var ReflectionClass */
+    /** @var \ReflectionClass */
     protected $reflectionClass;
 
     /** @var AnnotationReader */
@@ -27,20 +26,11 @@ class ReflectionClass
     {
         $this->reflectionClass = new \ReflectionClass($className);
         $this->annotationReader = new AnnotationReader($this->reflectionClass->getDocComment());
-
-    }
-
-    /**
-     * @param AnnotationReader $reader
-     */
-    public function setAnnotationReader(AnnotationReader $reader)
-    {
-        $this->annotationReader = $reader;
     }
 
     /**
      * @param $pathname
-     * @return ReflectionClass
+     * @return ReflectionClassTest
      * @throws RuntimeException
      * @throws InvalidArgumentException
      */
@@ -108,13 +98,7 @@ class ReflectionClass
      */
     public function getDescription()
     {
-        if (is_null($this->reflectionClass)) {
-            throw new OutOfBoundsException('ReflectionClass is not set.');
-        }
-
-        return $this->annotationReader->getDescription(
-            $this->reflectionClass->getDocComment()
-        );
+        return $this->annotationReader->getDescription();
     }
 
     /**
@@ -124,14 +108,7 @@ class ReflectionClass
      */
     public function getAnnotations($annotation = null)
     {
-        if (is_null($this->reflectionClass)) {
-            throw new OutOfBoundsException('ReflectionClass is not set.');
-        }
-
-        return $this->annotationReader->getAnnotations(
-            $this->reflectionClass->getDocComment(),
-            $annotation
-        );
+        return $this->annotationReader->getAnnotations($annotation);
     }
 
     /**
@@ -152,6 +129,6 @@ class ReflectionClass
      */
     public function parseMagicMethodAnnotation($methodString)
     {
-        $this->annotationReader->parseMagicMethodAnnotation($methodString);
+        return $this->annotationReader->parseMagicMethodAnnotation($methodString);
     }
 }

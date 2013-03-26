@@ -35,6 +35,7 @@ class GenerateCommand extends Command
      * @param OutputInterface $output
      * @return int|null|void
      * @throws \RuntimeException
+     * @throws InvalidArgumentException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -66,7 +67,8 @@ class GenerateCommand extends Command
         $pathname =
             $config->getGeneratorDirectory() .
             DIRECTORY_SEPARATOR .
-                $input->getArgument('generator-file') . 'Generator.php';
+            $input->getArgument('generator-file') . 'Generator.php';
+
         $this->configureAndRunGenerator($pathname, $output);
 
         $output->writeln('Finished generation.');

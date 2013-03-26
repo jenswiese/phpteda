@@ -22,6 +22,15 @@ class AnnotationReader
     }
 
     /**
+     * @param $docComment
+     * @return AnnotationReader
+     */
+    public static function create($docComment)
+    {
+        return new self($docComment);
+    }
+
+    /**
      * @return string
      */
     public function getDescription()

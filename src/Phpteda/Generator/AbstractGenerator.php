@@ -5,7 +5,6 @@ namespace Phpteda\Generator;
 use Faker\Factory;
 use Faker\Generator;
 use Phpteda\Reflection\ReflectionClass;
-use Zend\File\Transfer\Exception\InvalidArgumentException;
 
 /**
  * Abstract base class for custom generator classes
@@ -43,7 +42,7 @@ abstract class AbstractGenerator implements GeneratorInterface
             $faker = Factory::create('de_DE');
         }
 
-        foreach ($this->getProvidersByAnnotation() as $providerClass) {
+        foreach ((array) $this->getProvidersByAnnotation() as $providerClass) {
             if (!class_exists($providerClass)) {
                 throw new \InvalidArgumentException("Provider '" . $providerClass . "' does not exist.");
             }

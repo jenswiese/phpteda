@@ -70,9 +70,7 @@ class MethodRetriever
     {
         $methods = array();
 
-        $magicMethodAnnotations = $this->reflectionClass->getAnnotations('method');
-
-        foreach ($magicMethodAnnotations as $methodString) {
+        foreach ($this->reflectionClass->getAnnotations('method') as $methodString) {
             $method = new Method(
                 $this->reflectionClass->parseMagicMethodAnnotation($methodString)
             );

@@ -7,7 +7,6 @@ use InvalidArgumentException;
 use Phpteda\Reflection\ReflectionClass;
 use Phpteda\Reflection\MethodRetriever;
 use RuntimeException;
-use ReflectionClass;
 use Faker\Factory as FakerFactory;
 
 /**

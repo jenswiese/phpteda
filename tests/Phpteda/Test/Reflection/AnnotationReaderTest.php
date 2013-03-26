@@ -174,12 +174,48 @@ EOT;
         $this->assertEquals($expectedAnnotations, $actualAnnotations);
     }
 
-
     public function testGettingDescription()
     {
         $expectedDescription = 'This is a test class for class reflection, nothing more, nothing less';
         $actualDescription = $this->reader->getDescription();
 
         $this->assertEquals($expectedDescription, $actualDescription);
+    }
+
+    public static function provideMagicMethodStrings()
+    {
+        return array(
+            'complete' => array(
+                'bool isValid(Form $form) Checks form object',
+                'bool,isValid,Form,form,Checks form object'
+            ),
+            'without return-type' => array(
+                'isValid(Form $form) Checks form object',
+                ',isValid,Form,form,Checks form object'
+            ),
+            'without parameter' => array(
+                'string getName() Returns name',
+                'string,getName,,,Returns name'
+            ),
+            'without description' => array(
+                'string getName()',
+                'string,getName,,,'
+            ),
+            'with many spaces' => array(
+                ' bool  isValid(Form $form)  Checks form object ',
+                'bool,isValid,Form,form,Checks form object'
+            )
+        );
+    }
+
+    /**
+     * @dataProvider provideMagicMethodStrings
+     */
+    public function testParseMagicMethodAnnotation($methodString, $expectedString)
+    {
+        $methodParts = $this->reader->parseMagicMethodAnnotation($methodString);
+        $actualString = implode(',', $methodParts);
+
+        $this->assertEquals($expectedString, $actualString);
     }
 }

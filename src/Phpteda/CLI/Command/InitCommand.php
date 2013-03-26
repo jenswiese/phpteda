@@ -102,9 +102,8 @@ class InitCommand extends Command
     protected function getAvailableBootstrapPathnames()
     {
         $bootstrapPathnames = array();
-
         $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(getcwd()));
-        /** @var \DirectoryIterator $entry */
+
         foreach ($iterator as $entry) {
             if ('bootstrap.php' != $entry->getBasename()) {
                 continue;
