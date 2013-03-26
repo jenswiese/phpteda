@@ -16,6 +16,11 @@ use Phpteda\Generator\AbstractGenerator;
  *
  * @method TestGenerator isActive() Should entries be active
  * @method TestGenerator withValue($value) Provide value
+ *
+ * <select name="Job Approval">
+ * @method TestGenerator isActive2() Should entries be active
+ * @method TestGenerator withValue2($value) Provide value
+ * </select>
  */
 class TestGenerator extends AbstractGenerator
 {

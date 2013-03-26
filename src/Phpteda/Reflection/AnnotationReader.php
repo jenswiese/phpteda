@@ -2,6 +2,8 @@
 
 namespace Phpteda\Reflection;
 
+use Phpteda\Reflection\Method\Method;
+
 /**
  * Class AnnotationReader
  *
@@ -103,6 +105,38 @@ class AnnotationReader
     }
 
     /**
+     * @return Method[]
+     */
+    public function getSelectableMethods()
+    {
+        foreach ($this->getSelectableMethodAnnotations() as $name => $annotations) {
+            foreach ($annotations as $methodString) {
+                $methods[$name][] = new Method($this->parseMagicMethodAnnotation($methodString));
+            }
+        }
+
+        return $methods;
+    }
+
+    /**
+     * @return Method[]
+     */
+    public function getGroupedMethods()
+    {
+        foreach ($this->getUntaggedMethodAnnotations() as $methodString) {
+            $methods['Common'][] = new Method($this->parseMagicMethodAnnotation($methodString));
+        }
+
+        foreach ($this->getGroupedMethodAnnotations() as $name => $annotations) {
+            foreach ($annotations as $methodString) {
+                $methods[$name][] = new Method($this->parseMagicMethodAnnotation($methodString));
+            }
+        }
+
+        return $methods;
+    }
+
+    /**
      * @return array
      */
     public function getSelectableMethodAnnotations()
@@ -198,6 +232,6 @@ class AnnotationReader
             $annotations[$name] = $annotationReader->getAnnotations($annotation);
         }
 
-        return array($tagName => $annotations);
+        return $annotations;
     }
 }

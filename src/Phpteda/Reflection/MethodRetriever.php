@@ -72,7 +72,19 @@ class MethodRetriever
         $methods = array();
         $annotationReader = $this->reflectionClass->getAnnotationReader();
 
-        foreach ($annotationReader->getAnnotations('method') as $methodString) {
+        foreach ($annotationReader->getSelectableMethodAnnotations() as $name => $methodString) {
+            $method = new Method(
+                $annotationReader->parseMagicMethodAnnotation($methodString)
+            );
+
+            if ($this->isIgnoredMethodName($method->getName())) {
+                continue;
+            }
+
+            $methods[] = $method;
+        }
+
+        foreach ($annotationReader->getUntaggedMethodAnnotations() as $methodString) {
             $method = new Method(
                 $annotationReader->parseMagicMethodAnnotation($methodString)
             );

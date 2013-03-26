@@ -5,7 +5,7 @@ namespace Phpteda\CLI\Command;
 use Phpteda\CLI\Config;
 use Phpteda\CLI\Helper\Table;
 use Phpteda\Generator\Configuration\Configurator;
-use Phpteda\Generator\Configuration\ConfiguratorProperty;
+use Phpteda\Generator\Configuration\Property;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

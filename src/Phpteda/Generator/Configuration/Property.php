@@ -2,13 +2,15 @@
 
 namespace Phpteda\Generator\Configuration;
 
+use Phpteda\Reflection\Method\Method;
+
 /**
  * Class that holds property to configure generator
  *
  * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-03-19
  */
-class ConfiguratorProperty
+class Property
 {
     const TYPE_BOOL = 1;
     const TYPE_MIXED = 2;
@@ -34,6 +36,18 @@ class ConfiguratorProperty
         $this->value = $data['value'];
         $this->question = $data['question'];
         $this->type = $data['type'];
+    }
+
+    /**
+     * @param Method $method
+     */
+    public function fromMethodObject(Method $method)
+    {
+        $this->setName($method->getName());
+        $this->setQuestion($method->getDescription());
+        $type = $method->hasParameter() ? ConfiguratorProperty::TYPE_MIXED : ConfiguratorProperty::TYPE_BOOL;
+        $this->setType($type);
+        $this->value = null;
     }
 
     /**

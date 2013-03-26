@@ -63,15 +63,13 @@ EOT;
     public function testReadSelectableMethodAnnotations()
     {
         $expectedAnnotations = array(
-            'select' => array(
-                'Selectable 1' => array(
-                    'mixed method1Selectable1() Returns something',
-                    'mixed method2Selectable1() Returns something'
-                ),
-                'Selectable 2' => array(
-                    'string method1Selectable2() Returns something',
-                    'string method2Selectable2() Returns something'
-                )
+            'Selectable 1' => array(
+                'mixed method1Selectable1() Returns something',
+                'mixed method2Selectable1() Returns something'
+            ),
+            'Selectable 2' => array(
+                'string method1Selectable2() Returns something',
+                'string method2Selectable2() Returns something'
             )
         );
 
@@ -83,15 +81,13 @@ EOT;
     public function testReadGroupedMethodAnnotations()
     {
         $expectedAnnotations = array(
-            'group' => array(
-                'Group 1' => array(
-                    'string method1Group1() Returns a name',
-                    'string method2Group1() Returns a name'
-                ),
-                'Group 2' => array(
-                    'mixed method1Group2() Returns something',
-                    'mixed method2Group2() Returns something'
-                )
+            'Group 1' => array(
+                'string method1Group1() Returns a name',
+                'string method2Group1() Returns a name'
+            ),
+            'Group 2' => array(
+                'mixed method1Group2() Returns something',
+                'mixed method2Group2() Returns something'
             )
         );
 
@@ -217,5 +213,15 @@ EOT;
         $actualString = implode(',', $methodParts);
 
         $this->assertEquals($expectedString, $actualString);
+    }
+
+    public function testGettingSelectableMethods()
+    {
+        $this->markTestIncomplete();
+    }
+
+    public function testGettingGroupedMethods()
+    {
+        $this->markTestIncomplete();
     }
 }
