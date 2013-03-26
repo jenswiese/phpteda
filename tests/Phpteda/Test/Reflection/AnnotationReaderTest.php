@@ -42,16 +42,18 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
  * @method mixed method2Group2() Returns something
  * </group>
  *
- * <select name="Selectable 1">
+ * <select name="Selectable 1 ">
  * @method mixed method1Selectable1() Returns something
  * @method mixed method2Selectable1() Returns something
  * </select>
  *
- * <select name="Selectable 2">
+ * <select name="Selectable 2 ">
  * @method string method1Selectable2() Returns something
  * @method string method2Selectable2() Returns something
  * </select>
- */
+ *
+ * @method string lastMethod() Returns a name
+  */
 EOT;
 
         $this->reader = new AnnotationReader($docComment);
@@ -74,7 +76,6 @@ EOT;
         );
 
         $actualAnnotations = $this->reader->getSelectableMethodAnnotations();
-
         $this->assertEquals($expectedAnnotations, $actualAnnotations);
     }
 
@@ -82,40 +83,103 @@ EOT;
     public function testReadGroupedMethodAnnotations()
     {
         $expectedAnnotations = array(
-            'select' => array(
+            'group' => array(
                 'Group 1' => array(
-                    'mixed method1Selectable1() Returns something',
-                    'mixed method2Selectable1() Returns something'
+                    'string method1Group1() Returns a name',
+                    'string method2Group1() Returns a name'
                 ),
                 'Group 2' => array(
-                    'string method1Selectable2() Returns something',
-                    'string method2Selectable2() Returns something'
+                    'mixed method1Group2() Returns something',
+                    'mixed method2Group2() Returns something'
                 )
             )
         );
 
-        $actualAnnotations = $this->reader->getSelectableMethodAnnotations();
+        $actualAnnotations = $this->reader->getGroupedMethodAnnotations();
 
         $this->assertEquals($expectedAnnotations, $actualAnnotations);
 
     }
 
-
-    public function testReadUntaggedAnnotations()
+    public function testUntaggedMethodAnnotations()
     {
+        $expectedAnnotations = array(
+            'string getName() Returns a name',
+            'string parseName(string $name) Parses name',
+            'string lastMethod() Returns a name'
+        );
 
+        $actualAnnotations = $this->reader->getUntaggedMethodAnnotations();
+        $this->assertEquals($expectedAnnotations, $actualAnnotations);
     }
 
 
-    public function testReadAllAnnotations()
+    public function testReadAllAnnotationsWithoutGrouping()
     {
+        $expectedAnnotations = array(
+            'author' => 'Jens Wiese',
+            'since' => '1.0.0',
+            'fakerLocale' => 'de_DE',
+            'fakerProvider' => array(
+                '\path\to\customProviderOne',
+                '\path\to\customProviderTwo'
+            ),
+            'method' => array(
+                'string getName() Returns a name',
+                'string parseName(string $name) Parses name',
+                'string method1Group1() Returns a name',
+                'string method2Group1() Returns a name',
+                'mixed method1Group2() Returns something',
+                'mixed method2Group2() Returns something',
+                'mixed method1Selectable1() Returns something',
+                'mixed method2Selectable1() Returns something',
+                'string method1Selectable2() Returns something',
+                'string method2Selectable2() Returns something',
+                'string lastMethod() Returns a name'
+            )
+        );
 
+        $actualAnnotations = $this->reader->getAnnotations();
+
+        $this->assertEquals($expectedAnnotations, $actualAnnotations);
+    }
+
+    public function testReadSpecificAnnotationWithoutGrouping()
+    {
+        $expectedAnnotations = 'Jens Wiese';
+
+        $actualAnnotations = $this->reader->getAnnotations('author');
+
+        $this->assertEquals($expectedAnnotations, $actualAnnotations);
+    }
+
+    public function testReadSpecificMultipleAnnotationsWithoutGrouping()
+    {
+        $expectedAnnotations = array(
+            'string getName() Returns a name',
+            'string parseName(string $name) Parses name',
+            'string method1Group1() Returns a name',
+            'string method2Group1() Returns a name',
+            'mixed method1Group2() Returns something',
+            'mixed method2Group2() Returns something',
+            'mixed method1Selectable1() Returns something',
+            'mixed method2Selectable1() Returns something',
+            'string method1Selectable2() Returns something',
+            'string method2Selectable2() Returns something',
+            'string lastMethod() Returns a name'
+        );
+
+        $actualAnnotations = $this->reader->getAnnotations('method');
+
+        $this->assertEquals($expectedAnnotations, $actualAnnotations);
     }
 
 
     public function testGettingDescription()
     {
-        
-    }
+        $expectedDescription = 'This is a test class for class reflection, nothing more, nothing less';
+        $actualDescription = $this->reader->getDescription();
 
+        $this->assertEquals($expectedDescription, $actualDescription);
+    }
 }

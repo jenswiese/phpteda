@@ -73,7 +73,17 @@ class AnnotationReader
             $name = $match[1];
             $value = $match[2];
 
-            $annotations[$name][] = $value;
+            $nameExistsAlready = isset($annotations[$name]);
+
+            if ($nameExistsAlready) {
+                if (!is_array($annotations[$name])) {
+                    $annotations[$name] = array($annotations[$name]);
+                }
+
+                $annotations[$name][] = $value;
+            } else {
+                $annotations[$name] = $value;
+            }
         }
 
         if (!is_null($annotation) && isset($annotations[$annotation])) {
@@ -97,6 +107,23 @@ class AnnotationReader
     public function getGroupedMethodAnnotations()
     {
         return $this->getAnnotationsByTagName('group', 'method');
+    }
+
+    /**
+     * @return array
+     */
+    public function getUntaggedMethodAnnotations()
+    {
+        $docComment = $this->docComment;
+        $removableTags = array('select', 'group');
+
+        foreach ($removableTags as $tag) {
+            $pattern = '#<'.$tag.'(?:\s+[^>]+)?>(.*?)</'.$tag.'>#s';
+            $docComment = preg_replace($pattern, '', $docComment);
+        }
+
+        $reader = new AnnotationReader($docComment);
+        return $reader->getAnnotations('method');
     }
 
     /**
@@ -142,6 +169,7 @@ class AnnotationReader
 
     /**
      * @param $tagName
+     * @param null $annotation
      * @return array
      */
     protected function getAnnotationsByTagName($tagName, $annotation = null)
@@ -155,14 +183,12 @@ class AnnotationReader
         );
 
         foreach ($matches as $match) {
-            $annotationReader = new AnnotationReader($match[1]);
-            $annotations[] = $annotationReader->getAnnotations($annotation);
+            $xml = new \SimpleXMLElement($match[0]);
+            $annotationReader = new AnnotationReader(trim($xml));
+            $name = trim($xml->attributes()->name);
+            $annotations[$name] = $annotationReader->getAnnotations($annotation);
         }
 
-        return array(
-            $tagName => array(
-                $annotations
-            )
-        );
+        return array($tagName => $annotations);
     }
 }
