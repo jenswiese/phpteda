@@ -29,8 +29,16 @@ class ReflectionClass
     }
 
     /**
+     * @return AnnotationReader
+     */
+    public function getAnnotationReader()
+    {
+        return $this->annotationReader;
+    }
+
+    /**
      * @param $pathname
-     * @return ReflectionClassTest
+     * @return ReflectionClass
      * @throws RuntimeException
      * @throws InvalidArgumentException
      */
@@ -88,47 +96,5 @@ class ReflectionClass
     public function getName()
     {
         return $this->reflectionClass->getName();
-    }
-
-    /**
-     * Retrieves the description of class
-     *
-     * @return string
-     * @throws OutOfBoundsException
-     */
-    public function getDescription()
-    {
-        return $this->annotationReader->getDescription();
-    }
-
-    /**
-     * @param string|null $annotation
-     * @return array|mixed
-     * @throws \OutOfBoundsException
-     */
-    public function getAnnotations($annotation = null)
-    {
-        return $this->annotationReader->getAnnotations($annotation);
-    }
-
-    /**
-     * Returns infos about magic method as array
-     *
-     * Example:
-     *
-     *      array(
-     *          'returnType' => 'UserGenerator',
-     *          'methodName' => 'setName',
-     *          'parameterType' => 'string',
-     *          'parameterName' => 'name',
-     *          'description' => 'Please provide name.'
-     *      );
-     *
-     * @param string $methodString
-     * @return array
-     */
-    public function parseMagicMethodAnnotation($methodString)
-    {
-        return $this->annotationReader->parseMagicMethodAnnotation($methodString);
     }
 }

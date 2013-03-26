@@ -129,10 +129,7 @@ class Configurator
     {
         $properties = array();
 
-        $methodRetriever = new MethodRetriever(
-            new ReflectionClass($this->generatorClassName),
-            new ReflectionClass($this->generatorClassName)
-        );
+        $methodRetriever = new MethodRetriever(new ReflectionClass($this->generatorClassName));
 
         foreach ($methodRetriever->getAllPublicMethods() as $method) {
             if (!$method->hasDescription()) {

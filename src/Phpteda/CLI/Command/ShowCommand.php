@@ -54,7 +54,8 @@ class ShowCommand extends Command
                 ->addColumn('<comment>Description</comment>');
 
         foreach ($iterator as $generatorFile) {
-            $description = ReflectionClass::createByPathname($generatorFile->getPathname())->getDescription();
+            $description = ReflectionClass::createByPathname($generatorFile->getPathname())
+                ->getAnnotationReader()->getDescription();
 
             $table->addRow()
                 ->addColumn($generatorFile->getBasename('Generator.php'))

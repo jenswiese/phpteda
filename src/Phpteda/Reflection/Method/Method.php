@@ -1,6 +1,6 @@
 <?php
 
-namespace Phpteda\Reflection;
+namespace Phpteda\Reflection\Method;
 
 /**
  * Class for ...

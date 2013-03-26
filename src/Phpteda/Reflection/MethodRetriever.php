@@ -3,6 +3,7 @@
 namespace Phpteda\Reflection;
 
 use Phpteda\Reflection\ReflectionClass;
+use Phpteda\Reflection\Method\Method;
 
 /**
  * Class for retrieving methods from given Generator class
@@ -69,10 +70,11 @@ class MethodRetriever
     public function getMagicMethods()
     {
         $methods = array();
+        $annotationReader = $this->reflectionClass->getAnnotationReader();
 
-        foreach ($this->reflectionClass->getAnnotations('method') as $methodString) {
+        foreach ($annotationReader->getAnnotations('method') as $methodString) {
             $method = new Method(
-                $this->reflectionClass->parseMagicMethodAnnotation($methodString)
+                $annotationReader->parseMagicMethodAnnotation($methodString)
             );
 
             if ($this->isIgnoredMethodName($method->getName())) {

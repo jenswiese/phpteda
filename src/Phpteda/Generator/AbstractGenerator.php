@@ -128,7 +128,7 @@ abstract class AbstractGenerator implements GeneratorInterface
     protected function getProvidersByAnnotation()
     {
         $classReader = new ReflectionClass(get_called_class());
-        return $classReader->getAnnotations('fakerProvider');
+        return $classReader->getAnnotationReader()->getAnnotations('fakerProvider');
     }
 
     /**
@@ -136,8 +136,8 @@ abstract class AbstractGenerator implements GeneratorInterface
      */
     protected function getLocaleByAnnotation()
     {
-        $classReader = new ReflectionClass(get_called_class());
-        $annotatedLocale = $classReader->getAnnotations('fakerLocale');
+        $reflectionClass = new ReflectionClass(get_called_class());
+        $annotatedLocale = $reflectionClass->getAnnotationReader()->getAnnotations('fakerLocale');
         $locale = empty($annotatedLocale) ? 'en_EN' : $annotatedLocale;
 
         return $locale;
