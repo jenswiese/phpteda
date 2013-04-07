@@ -43,5 +43,19 @@ class PropertyGroup
         }
     }
 
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 
+    /**
+     * @return Property[]
+     */
+    public function getProperties()
+    {
+        return $this->properties;
+    }
 }

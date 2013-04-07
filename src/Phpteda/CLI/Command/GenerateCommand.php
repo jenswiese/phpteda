@@ -6,6 +6,9 @@ use Phpteda\CLI\Config;
 use Phpteda\CLI\Helper\Table;
 use Phpteda\Generator\Configuration\Configurator;
 use Phpteda\Generator\Configuration\Property;
+use Phpteda\Generator\Configuration\PropertyGroup;
+use Phpteda\Generator\Configuration\PropertySelection;
+use Phpteda\Generator\GeneratorInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,6 +25,10 @@ use InvalidArgumentException;
  */
 class GenerateCommand extends Command
 {
+    /** @var Configurator */
+    protected $configurator;
+
+
     protected function configure()
     {
         $this
@@ -69,35 +76,33 @@ class GenerateCommand extends Command
             DIRECTORY_SEPARATOR .
             $input->getArgument('generator-file') . 'Generator.php';
 
-        $this->configureAndRunGenerator($pathname, $output);
+        $this->configurator = Configurator::createByGeneratorPathname($pathname);
+
+        $this->configureAndRunGenerator($output);
 
         $output->writeln('Finished generation.');
     }
 
-    protected function configureAndRunGenerator($generatorPathname, OutputInterface $output)
+    /**
+     * @param $generatorPathname
+     * @param OutputInterface $output
+     */
+    protected function configureAndRunGenerator(OutputInterface $output)
     {
         $output->writeln('');
-        $output->writeln("<info>Configuring generator:</info> " . $generatorPathname);
+        $output->writeln("<info>Configuring generator:</info> " . $this->configurator->getGeneratorClassName());
 
         $dialog = new DialogHelper();
-        $configurator = Configurator::createByGeneratorPathname($generatorPathname);
 
-        foreach ($configurator->getProperties() as $property) {
-            $question = '<question>' . $property->getQuestion() . ' %s</question> ';
-            $defaultValue = false;
-
-            if ($property->isBool()) {
-                $question = sprintf($question, '[y/N]?');
-                $answer = $dialog->askConfirmation($output, $question, $defaultValue);
-            } else {
-                $question = sprintf($question, '[]:');
-                $answer = $dialog->ask($output, $question, $defaultValue);
+        foreach ($this->configurator->getProperties() as $property) {
+            if ($property instanceof PropertyGroup) {
+                $this->configurePropertyGroup($property, $output);
+            } elseif ($property instanceof PropertySelection) {
+                $this->configurePropertySelection($property, $output);
             }
-
-            $property->setValue($answer);
         }
 
-        $generator = $configurator->getConfiguredGenerator();
+        $generator = $this->configurator->getConfiguredGenerator();
 
         $amount = $dialog->ask($output, '<question>How many [1]?</question> ', 1);
         $shouldRemoveExistingData = $dialog->askConfirmation(
@@ -112,4 +117,35 @@ class GenerateCommand extends Command
 
         $generator->amount($amount);
     }
+
+
+    protected function configurePropertySelection(PropertySelection $selection, OutputInterface $output)
+    {
+        $dialog = $this->getHelperSet()->get('dialog');
+        $selectedKey = $dialog->select($output, $selection->getName(), $selection->getOptions());
+        $selection->setSelectedOptionByKey($selectedKey);
+    }
+
+
+    protected function configurePropertyGroup(PropertyGroup $group, OutputInterface $output)
+    {
+        $dialog = $this->getHelperSet()->get('dialog');
+        $output->writeln($group->getName());
+
+        foreach ($group->getProperties() as $property) {
+            $question = '<question>' . $property->getQuestion() . ' %s</question> ';
+            $defaultValue = false;
+
+            if ($property->isBool()) {
+                $question = sprintf($question, '[y/N]?');
+                $answer = $dialog->askConfirmation($output, $question, $defaultValue);
+            } else {
+                $question = sprintf($question, '[]:');
+                $answer = $dialog->ask($output, $question, $defaultValue);
+            }
+
+            $property->setValue($answer);
+        }
+    }
+
 }

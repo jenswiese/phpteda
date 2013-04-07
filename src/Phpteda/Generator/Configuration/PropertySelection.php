@@ -18,6 +18,9 @@ class PropertySelection
     /** @var array */
     protected $properties = array();
 
+    /** @var string */
+    protected $selectedIndex;
+
     /**
      * @param string $name
      */
@@ -43,5 +46,42 @@ class PropertySelection
         }
     }
 
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        $options = array();
+        foreach ($this->properties as $key => $property) {
+            $options[$key+1] = $property->getQuestion();
+        }
+
+        return $options;
+    }
+
+    /**
+     * @param string $name
+     * @return Property
+     */
+    public function setSelectedOptionByKey($index)
+    {
+        $this->selectedIndex = $index-1;
+        $this->properties[$this->selectedIndex]->setValue(true);
+    }
+
+    /**
+     * @return Property
+     */
+    public function getSelectedProperty()
+    {
+        return $this->properties[$this->selectedIndex];
+    }
 }

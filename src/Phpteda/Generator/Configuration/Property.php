@@ -45,7 +45,7 @@ class Property
     {
         $this->setName($method->getName());
         $this->setQuestion($method->getDescription());
-        $type = $method->hasParameter() ? ConfiguratorProperty::TYPE_MIXED : ConfiguratorProperty::TYPE_BOOL;
+        $type = $method->hasParameter() ? self::TYPE_MIXED : self::TYPE_BOOL;
         $this->setType($type);
         $this->value = null;
     }

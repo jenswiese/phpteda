@@ -67,6 +67,14 @@ class Configurator
         $this->properties = $this->retrievePropertiesFromGenerator();
     }
 
+    /**
+     * @return string
+     */
+    public function getGeneratorClassName()
+    {
+        return $this->generatorClassName;
+    }
+
 
     /**
      * @param array $properties
@@ -76,7 +84,7 @@ class Configurator
         foreach ($properties as $propertyData) {
             $property = new Property();
             $property->fromArray($propertyData);
-            $this->properties[$propertyData['name']] = $property;
+            $this->properties[] = $property;
         }
     }
 
@@ -145,7 +153,14 @@ class Configurator
         );
 
         foreach ($this->properties as $property) {
-            $this->configuredGenerator->{$property->getName()}($property->getValue());
+            if ($property instanceof PropertyGroup) {
+                foreach ($property->getProperties() as $groupedProperty) {
+                    $this->configuredGenerator->{$groupedProperty->getName()}($groupedProperty->getValue());
+                }
+            } elseif ($property instanceof PropertySelection) {
+                $selectedProperty = $property->getSelectedProperty();
+                $this->configuredGenerator->{$selectedProperty->getName()}($selectedProperty->getValue());
+            }
         }
     }
 
@@ -154,12 +169,14 @@ class Configurator
      */
     protected function getGroupedProperties()
     {
+        $groups = array();
+
         $reflectionClass = new ReflectionClass($this->generatorClassName);
         $annotationReader = $reflectionClass->getAnnotationReader();
 
         foreach ($annotationReader->getGroupedMethods() as $name => $methods) {
             $group = new PropertyGroup($name);
-            $group->fromArray($methods);
+            $group->fromMethodArray($methods);
             $groups[] = $group;
         }
 
@@ -171,12 +188,14 @@ class Configurator
      */
     protected function getSelectionProperties()
     {
+        $selections = array();
+
         $reflectionClass = new ReflectionClass($this->generatorClassName);
         $annotationReader = $reflectionClass->getAnnotationReader();
 
         foreach ($annotationReader->getSelectableMethods() as $name => $methods) {
             $selection = new PropertySelection($name);
-            $selection->fromArray($methods);
+            $selection->fromMethodArray($methods);
             $selections[] = $selection;
         }
 
