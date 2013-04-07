@@ -8,8 +8,6 @@ use Phpteda\Generator\Configuration\Configurator;
 use Phpteda\Generator\Configuration\Property;
 use Phpteda\Generator\Configuration\PropertyGroup;
 use Phpteda\Generator\Configuration\PropertySelection;
-use Phpteda\Generator\GeneratorInterface;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

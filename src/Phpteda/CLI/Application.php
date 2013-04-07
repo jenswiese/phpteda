@@ -2,12 +2,14 @@
 
 namespace Phpteda\CLI;
 
+use Phpteda\CLI\IO\ConsoleIO;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Command\HelpCommand;
 use Phpteda\CLI\Config;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class represents console application
@@ -19,6 +21,9 @@ class Application extends SymfonyApplication
 {
     /** @var Config */
     protected $config;
+
+    /** @var ConsoleIO */
+    protected $io;
 
     /**
      * Constructor of the class
@@ -38,6 +43,33 @@ class Application extends SymfonyApplication
     public function getConfig()
     {
         return $this->config;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function doRun(InputInterface $input, OutputInterface $output)
+    {
+        $this->io = new ConsoleIO($input, $output, $this->getHelperSet());
+
+        return parent::doRun($input, $output);
+    }
+
+    /**
+     * @return ConsoleIO
+     */
+    public function getIO()
+    {
+        return $this->io;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getTerminalWidth()
+    {
+        $dimensions = $this->getTerminalDimensions();
+        return $dimensions[0];
     }
 
     /**

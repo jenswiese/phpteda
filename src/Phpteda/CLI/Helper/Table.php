@@ -2,6 +2,7 @@
 
 namespace Phpteda\CLI\Helper;
 
+use Phpteda\CLI\IO\ConsoleIO;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -34,19 +35,19 @@ class Table
     /** @var integer */
     protected $width;
 
-    /** @var \Symfony\Component\Console\Output\Output */
-    protected $output;
+    /** @var ConsoleIO */
+    protected $io;
 
     /**
      * Creates Table
      *
-     * @param OutputInterface $output
-     * @param $width
+     * @param ConsoleIO $io
+     * @param integer $width
      * @return Table
      */
-    public static function create(OutputInterface $output, $width)
+    public static function create(ConsoleIO $io, $width)
     {
-        return new self($output, $width);
+        return new self($io, $width);
     }
 
     /**
@@ -89,12 +90,12 @@ class Table
     /**
      * Protected constructor of the class (use create())
      *
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     * @param ConsoleIO $io
      * @param $width
      */
-    protected function __construct(OutputInterface $output, $width)
+    protected function __construct(ConsoleIO $io, $width)
     {
-        $this->output = $output;
+        $this->io = $io;
         $this->width = $width;
     }
 
@@ -150,9 +151,9 @@ class Table
         $columnWidth = ($this->lastColumnCount > 1) ? $this->lastColumnWidth : $this->columnWidth;
 
         for ($i = 0; $i < $columnCount; $i++) {
-            $this->output->write(str_pad('+', $columnWidth, '-', STR_PAD_RIGHT));
+            $this->io->write(str_pad('+', $columnWidth, '-', STR_PAD_RIGHT), false);
         }
-        $this->output->writeln('+');
+        $this->io->write('+');
     }
 
     /**
@@ -164,8 +165,8 @@ class Table
             $valueCountForTags = strlen($this->columns[$i]) - strlen(strip_tags($this->columns[$i]));
             $columnWidth = (integer) $this->columnWidth + $valueCountForTags;
 
-            $this->output->write(str_pad('| ' . $this->columns[$i], $columnWidth, ' ', STR_PAD_RIGHT));
+            $this->io->write(str_pad('| ' . $this->columns[$i], $columnWidth, ' ', STR_PAD_RIGHT), false);
         }
-        $this->output->writeln('|');
+        $this->io->write('|');
     }
 }

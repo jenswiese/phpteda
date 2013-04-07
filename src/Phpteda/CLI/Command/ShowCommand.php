@@ -4,7 +4,6 @@ namespace Phpteda\CLI\Command;
 
 use Phpteda\CLI\Helper\Table;
 use Phpteda\Reflection\ReflectionClass;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -35,25 +34,21 @@ class ShowCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln($this->getApplication()->getLongVersion());
-        $output->writeln('');
+        $this->getIO()->write($this->getApplication()->getLongVersion());
+        $this->getIO()->write('');
 
-        $config = $this->getApplication()->getConfig();
-
-        if (!$config->hasGeneratorDirectory()) {
+        if (!$this->getConfig()->hasGeneratorDirectory()) {
             throw new \RuntimeException("Generator directory is not set. Please run 'init' command first.");
         }
 
-        $output->writeln('<comment>Using:</comment> ' . $config->getGeneratorDirectory());
+        $this->getIO()->write('<comment>Using:</comment> ' . $this->getConfig()->getGeneratorDirectory());
 
-        $iterator = new GeneratorDirectoryIterator(new DirectoryIterator($config->getGeneratorDirectory()));
-
-        $table = Table::create($output, 132)
+        $table = Table::create($this->getIO(), $this->getApplication()->getTerminalWidth())
             ->addRow()
                 ->addColumn('<comment>Generator</comment>')
                 ->addColumn('<comment>Description</comment>');
 
-        foreach ($iterator as $generatorFile) {
+        foreach ($this->getDirectoryIterator() as $generatorFile) {
             $description = ReflectionClass::createByPathname($generatorFile->getPathname())
                 ->getAnnotationReader()->getDescription();
 
@@ -61,6 +56,17 @@ class ShowCommand extends Command
                 ->addColumn($generatorFile->getBasename('Generator.php'))
                 ->addColumn($description);
         }
+
         $table->end();
+    }
+
+    /**
+     * @return GeneratorDirectoryIterator
+     */
+    protected function getDirectoryIterator()
+    {
+        return new GeneratorDirectoryIterator(
+            new DirectoryIterator($this->getConfig()->getGeneratorDirectory())
+        );
     }
 }
