@@ -8,6 +8,7 @@ use Phpteda\CLI\Command\ShowCommand;
 use Phpteda\CLI\Command\GenerateCommand;
 
 $files = array(
+    __DIR__ . '/../autoload.php',
     __DIR__ . '/../vendor/autoload.php',
     __DIR__ . '/../../../autoload.php'
 );
