@@ -1,9 +1,10 @@
 <?php
 
-namespace Phpteda\Examples;
+namespace PhptedaExamples;
 
 use Faker\Factory;
 use Phpteda\Util\Choice;
+use PhptedaExamples\User;
 
 /**
  * Class for generating CVS file with Users
@@ -13,12 +14,16 @@ use Phpteda\Util\Choice;
  *
  *
  * @method static UserGenerator generate()
- * @method UserGenerator activeUser()
- * @method UserGenerator deletedUser()
- * @method UserGenerator blockedUser()
- * @method UserGenerator createdAtToday()
- * @method UserGenerator noEmail()
- * @method UserGenerator withUserCategory($userCategory)
+ *
+ * <select name="User status">
+ * @method UserGenerator activeUser() Generate active users?
+ * @method UserGenerator deletedUser() Generate deleted users?
+ * @method UserGenerator blockedUser() Generate blocked users?
+ * </select>
+ *
+ * @method UserGenerator createdAtToday() Users should be created today?
+ * @method UserGenerator noEmail() Users should contain no email?
+ * @method UserGenerator withUserCategory($userCategory) Which user category should be taken?
  *
  */
 class UserGenerator extends \Phpteda\Generator\AbstractGenerator

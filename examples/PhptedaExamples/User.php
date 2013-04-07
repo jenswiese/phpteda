@@ -1,6 +1,6 @@
 <?php
 
-namespace Phpteda\Examples;
+namespace PhptedaExamples;
 
 /**
  * Example User

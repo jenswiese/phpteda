@@ -30,7 +30,7 @@
         "psr-0": {
             "Phpteda": "src/",
             "Phpteda\\Test\\": "tests/",
-            "PhptedaExample": "examples/"
+            "PhptedaExamples": "examples/"
         }
     },
     "minimum-stability": "dev"
