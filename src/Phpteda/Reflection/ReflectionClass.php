@@ -62,8 +62,8 @@ class ReflectionClass
             $className = trim($matches[2]);
         }
 
-        if (!isset($namespace) || !isset($className)) {
-            throw new \RuntimeException("File '" . $pathname . "' does not contain namespace or class-name.");
+        if (!isset($className)) {
+            throw new \RuntimeException("File '" . $pathname . "' does not contain class-name.");
         }
 
         return new self($namespace . '\\' .  $className);

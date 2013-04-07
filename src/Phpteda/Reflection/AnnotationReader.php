@@ -109,6 +109,8 @@ class AnnotationReader
      */
     public function getSelectableMethods()
     {
+        $methods = array();
+
         foreach ($this->getSelectableMethodAnnotations() as $name => $annotations) {
             foreach ($annotations as $methodString) {
                 $methods[$name][] = new Method($this->parseMagicMethodAnnotation($methodString));
@@ -161,7 +163,7 @@ class AnnotationReader
         $removableTags = array('select', 'group');
 
         foreach ($removableTags as $tag) {
-            $pattern = '#<'.$tag.'(?:\s+[^>]+)?>(.*?)</'.$tag.'>#s';
+            $pattern = '#<' . $tag . '(?:\s+[^>]+)?>(.*?)</' . $tag . '>#s';
             $docComment = preg_replace($pattern, '', $docComment);
         }
 
@@ -217,6 +219,8 @@ class AnnotationReader
      */
     protected function getAnnotationsByTagName($tagName, $annotation = null)
     {
+        $annotations = array();
+
         $pattern = '#<'.$tagName.'(?:\s+[^>]+)?>(.*?)</'.$tagName.'>#s';
         preg_match_all(
             $pattern,
