@@ -13,6 +13,24 @@ use Composer\IO\ConsoleIO as ComposerIO;
 class ConsoleIO extends ComposerIO
 {
     /**
+     * @param string $name
+     * @param mixed $value
+     */
+    public function setArgument($name, $value)
+    {
+        $this->input->setArgument($name, $value);
+    }
+
+    /**
+     * @param $name
+     * @return mixed
+     */
+    public function getArgument($name)
+    {
+        return $this->input->getArgument($name);
+    }
+
+    /**
      * @param string $question
      * @param array $suggestions
      * @param mixed $default

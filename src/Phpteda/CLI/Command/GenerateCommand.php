@@ -44,67 +44,55 @@ class GenerateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $dialog = new DialogHelper();
-        $config = $this->getApplication()->getConfig();
-
-        if (!$input->getArgument('generator-file')) {
+        if (!$this->getIO()->getArgument('generator-file')) {
             if ($input->getOption('verbose')) {
                 $this->getApplication()->get('show')->execute($input, $output);
             }
 
-            $generatorDirectory = new GeneratorDirectory($config->getGeneratorDirectory());
+            $generatorDirectory = new GeneratorDirectory($this->getConfig()->getGeneratorDirectory());
 
-            $input->setArgument(
+            $this->getIO()->setArgument(
                 'generator-file',
-                $dialog->ask(
-                    $output,
+                $this->getIO()->askWithSuggestions(
                     '<question>Which generator to take?</question> ',
-                    null,
                     $generatorDirectory->getGeneratorNames()
                 )
             );
         }
 
-        if (!$input->getArgument('generator-file')) {
+        if (!$this->getIO()->getArgument('generator-file')) {
             throw new InvalidArgumentException('No generator-file provided - giving up.');
         }
 
-        $pathname =
-            $config->getGeneratorDirectory() .
-            DIRECTORY_SEPARATOR .
-            $input->getArgument('generator-file') . 'Generator.php';
-
+        $pathname = sprintf(
+            '%s' . DIRECTORY_SEPARATOR . '%s',
+            $this->getConfig()->getGeneratorDirectory(),
+            $input->getArgument('generator-file') . 'Generator.php'
+        );
         $this->configurator = Configurator::createByGeneratorPathname($pathname);
 
-        $this->configureAndRunGenerator($output);
+        $this->configureAndRunGenerator();
 
-        $output->writeln('Finished generation.');
+        $this->getIO()->write('Finished generation.');
     }
 
-    /**
-     * @param $generatorPathname
-     * @param OutputInterface $output
-     */
-    protected function configureAndRunGenerator(OutputInterface $output)
+    protected function configureAndRunGenerator()
     {
-        $output->writeln('');
-        $output->writeln("<info>Configuring generator:</info> " . $this->configurator->getGeneratorClassName());
-
-        $dialog = new DialogHelper();
+        $this->getIO()->write('');
+        $this->getIO()->write("<info>Configuring generator:</info> " . $this->configurator->getGeneratorClassName());
 
         foreach ($this->configurator->getProperties() as $property) {
             if ($property instanceof PropertyGroup) {
-                $this->configurePropertyGroup($property, $output);
+                $this->configurePropertyGroup($property);
             } elseif ($property instanceof PropertySelection) {
-                $this->configurePropertySelection($property, $output);
+                $this->configurePropertySelection($property);
             }
         }
 
         $generator = $this->configurator->getConfiguredGenerator();
 
-        $amount = $dialog->ask($output, '<question>How many [1]?</question> ', 1);
-        $shouldRemoveExistingData = $dialog->askConfirmation(
-            $output,
+        $amount = $this->getIO()->ask('<question>How many [1]?</question> ', 1);
+        $shouldRemoveExistingData = $this->getIO()->askConfirmation(
             '<question>Remove existing data [y/N]?</question> ',
             false
         );
@@ -117,18 +105,16 @@ class GenerateCommand extends Command
     }
 
 
-    protected function configurePropertySelection(PropertySelection $selection, OutputInterface $output)
+    protected function configurePropertySelection(PropertySelection $selection)
     {
-        $dialog = $this->getHelperSet()->get('dialog');
-        $selectedKey = $dialog->select($output, $selection->getName(), $selection->getOptions());
+        $selectedKey = $this->getIO()->select($selection->getName(), $selection->getOptions());
         $selection->setSelectedOptionByKey($selectedKey);
     }
 
 
-    protected function configurePropertyGroup(PropertyGroup $group, OutputInterface $output)
+    protected function configurePropertyGroup(PropertyGroup $group)
     {
-        $dialog = $this->getHelperSet()->get('dialog');
-        $output->writeln($group->getName());
+        $this->getIO()->write($group->getName());
 
         foreach ($group->getProperties() as $property) {
             $question = '<question>' . $property->getQuestion() . ' %s</question> ';
@@ -136,10 +122,10 @@ class GenerateCommand extends Command
 
             if ($property->isBool()) {
                 $question = sprintf($question, '[y/N]?');
-                $answer = $dialog->askConfirmation($output, $question, $defaultValue);
+                $answer = $this->getIO()->askConfirmation($question, $defaultValue);
             } else {
                 $question = sprintf($question, '[]:');
-                $answer = $dialog->ask($output, $question, $defaultValue);
+                $answer = $this->getIO()->ask($question, $defaultValue);
             }
 
             $property->setValue($answer);
