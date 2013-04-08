@@ -31,55 +31,41 @@ class InitCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln($this->getApplication()->getLongVersion());
-        $output->writeln('');
+        $this->getIO()->write($this->getApplication()->getLongVersion());
+        $this->getIO()->write('');
 
-        $this->askBootstrapPathname($output);
-        $this->askGeneratorDirectory($output);
+        $this->askBootstrapPathname();
+        $this->askGeneratorDirectory();
 
         $this->getApplication()->getConfig();
-        $output->writeln('<info>Configuration is written.</info>');
+        $this->getIO()->write('<info>Configuration is written.</info>');
     }
 
-    /**
-     * @param OutputInterface $output
-     */
-    protected function askGeneratorDirectory(OutputInterface $output)
+    protected function askGeneratorDirectory()
     {
-        $dialog = new DialogHelper();
-        $config = $this->getApplication()->getConfig();
-
         while (true) {
-            $directory = $dialog->ask(
-                $output,
-                "<question>Provide directory for Generators:</question> [" . $config->getGeneratorDirectory() . "] ",
-                $config->getGeneratorDirectory(),
-                $this->getAvailableGeneratorDirectories()
+            $directory = $this->getIO()->askWithSuggestions(
+                "<question>Provide directory for Generators:</question> [" . $this->getConfig()->getGeneratorDirectory() . "] ",
+                $this->getAvailableGeneratorDirectories(),
+                $this->getConfig()->getGeneratorDirectory()
             );
 
             if (is_dir(realpath($directory))) {
-                $output->writeln("Writing '" . realpath($directory) . "' to configfile.");
-                $config->setGeneratorDirectory(realpath($directory));
+                $this->getIO()->write("Writing '" . realpath($directory) . "' to configfile.");
+                $this->getConfig()->setGeneratorDirectory(realpath($directory));
                 break;
             }
-            $output->writeln('<error>This is not a valid directory.</error>');
+            $this->getIO()->write('<error>This is not a valid directory.</error>');
         }
     }
 
-    /**
-     * @param OutputInterface $output
-     */
-    protected function askBootstrapPathname(OutputInterface $output)
+    protected function askBootstrapPathname()
     {
-        $dialog = new DialogHelper();
-        $config = $this->getApplication()->getConfig();
-
         while (true) {
-            $bootstrapPathname = $dialog->ask(
-                $output,
-                "<question>Provide path for bootstrap file:</question> [" . $config->getBootstrapPathname() . "] ",
-                $config->getBootstrapPathname(),
-                $this->getAvailableBootstrapPathnames()
+            $bootstrapPathname = $this->getIO()->askWithSuggestions(
+                "<question>Provide path for bootstrap file:</question> [" . $this->getConfig()->getBootstrapPathname() . "] ",
+                $this->getAvailableBootstrapPathnames(),
+                $this->getConfig()->getBootstrapPathname()
             );
 
             if (empty($bootstrapPathname)) {
@@ -87,11 +73,11 @@ class InitCommand extends Command
             }
 
             if (is_file(realpath($bootstrapPathname))) {
-                $output->writeln("Writing '" . realpath($bootstrapPathname) . "' to configfile.");
-                $config->setBootstrapPathname(realpath($bootstrapPathname));
+                $this->getIO()->write("Writing '" . realpath($bootstrapPathname) . "' to configfile.");
+                $this->getConfig()->setBootstrapPathname(realpath($bootstrapPathname));
                 break;
             }
-            $output->writeln('<error>This is not a valid file.</error>');
+            $this->getIO()->write('<error>This is not a valid file.</error>');
         }
     }
 
@@ -124,20 +110,19 @@ class InitCommand extends Command
         $directories = array();
 
         $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator(
-                getcwd(),
-                RecursiveDirectoryIterator::SKIP_DOTS
-            ),
+            new RecursiveDirectoryIterator(getcwd(), RecursiveDirectoryIterator::SKIP_DOTS),
             RecursiveIteratorIterator::CHILD_FIRST
         );
 
         foreach ($iterator as $entry) {
-            $containsGenerator = (false !== strpos(strtolower($entry->getFilename()), 'generator'));
-            if (!$entry->isDir() || !$containsGenerator) {
+            $isGeneratorFile = (strpos($entry->getFilename(), 'Generator.php') !== false);
+            $alreadyRetrieved = in_array($entry->getPath(), $directories);
+
+            if ($entry->isDir() || !$isGeneratorFile || $alreadyRetrieved) {
                 continue;
             }
 
-            $directories[] = $entry->getPathname();
+            $directories[] = $entry->getPath();
         }
 
         return $directories;
