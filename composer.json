@@ -14,7 +14,7 @@
     "require": {
         "php": ">=5.3.0",
         "symfony/console": "v2.2.0",
-        "composer/composer": "1.0.*@dev",
+        "composer/composer": "1.0.0-alpha6",
         "fzaninotto/faker": "1.1.*@dev"
     },
     "require-dev": {
