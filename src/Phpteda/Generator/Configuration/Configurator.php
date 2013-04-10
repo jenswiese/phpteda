@@ -168,6 +168,8 @@ class Configurator
     }
 
     /**
+     * Retrieves grouped Properties from given generator class
+     *
      * @return PropertyGroup[]
      */
     protected function getGroupedProperties()

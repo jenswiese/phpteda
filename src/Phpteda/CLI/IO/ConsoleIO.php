@@ -130,10 +130,14 @@ class ConsoleIO
     }
 
     /**
+     * Provides choice for user input
+     *
      * @param string $question
      * @param array $options
+     * @param bool $allowEmptyChoice
      * @param mixed $default
-     * @return string The answer
+     * @return string
+     * @throws \Exception
      */
     public function choice($question, array $options, $allowEmptyChoice = true, $default = null)
     {

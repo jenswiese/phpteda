@@ -77,9 +77,6 @@ class GenerateCommand extends Command
 
     protected function configureAndRunGenerator()
     {
-        $this->getIO()->write('');
-        $this->getIO()->write("<info>Configuring generator:</info> " . $this->configurator->getGeneratorClassName());
-
         foreach ($this->configurator->getProperties() as $property) {
             if ($property instanceof PropertyGroup) {
                 $this->configurePropertyGroup($property);
@@ -106,7 +103,10 @@ class GenerateCommand extends Command
 
     protected function configurePropertySelection(PropertySelection $selection)
     {
-        $selectedKey = $this->getIO()->choice($selection->getName(), $selection->getOptions());
+        $this->getIO()->write('');
+
+        $question = sprintf('<question>%s:</question>', $selection->getName());
+        $selectedKey = $this->getIO()->choice($question, $selection->getOptions());
         if (!is_null($selectedKey)) {
             $selection->setSelectedOptionByKey($selectedKey);
         }
@@ -114,17 +114,18 @@ class GenerateCommand extends Command
 
     protected function configurePropertyGroup(PropertyGroup $group)
     {
-        $this->getIO()->write($group->getName());
+        $this->getIO()->write('');
+        $this->getIO()->write('<question>' . $group->getName() . ':</question>');
 
         foreach ($group->getProperties() as $property) {
-            $question = '<question>' . $property->getQuestion() . ' %s</question> ';
+            $question = $property->getQuestion() . ' %s ';
             $defaultValue = false;
 
             if ($property->isBool()) {
-                $question = sprintf($question, '[y/N]?');
+                $question = sprintf($question, ' [y/N]?');
                 $answer = $this->getIO()->askConfirmation($question, $defaultValue);
             } else {
-                $question = sprintf($question, '[]:');
+                $question = sprintf($question, ' []:');
                 $answer = $this->getIO()->ask($question, $defaultValue);
             }
 

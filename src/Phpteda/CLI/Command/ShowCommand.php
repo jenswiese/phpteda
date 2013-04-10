@@ -34,9 +34,6 @@ class ShowCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getIO()->write($this->getApplication()->getLongVersion());
-        $this->getIO()->write('');
-
         if (!$this->getConfig()->hasGeneratorDirectory()) {
             throw new \RuntimeException("Generator directory is not set. Please run 'init' command first.");
         }

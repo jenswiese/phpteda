@@ -52,6 +52,9 @@ class Application extends SymfonyApplication
     {
         $this->io = new ConsoleIO($input, $output, $this->getHelperSet());
 
+        $this->io->write($this->getLongVersion());
+        $this->io->write('');
+
         return parent::doRun($input, $output);
     }
 

@@ -31,9 +31,6 @@ class InitCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getIO()->write($this->getApplication()->getLongVersion());
-        $this->getIO()->write('');
-
         $this->askBootstrapPathname();
         $this->askGeneratorDirectory();
 
