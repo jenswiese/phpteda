@@ -2,6 +2,7 @@
 
 namespace Phpteda\CLI\IO;
 
+use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -114,7 +115,6 @@ class ConsoleIO
         return $this->helperSet->get('dialog')->ask($this->output, $question, $default, $suggestions);
     }
 
-
     /**
      * @param string $question
      * @param array $options
@@ -127,5 +127,38 @@ class ConsoleIO
         $errorMessage = 'Value "%s" is invalid';
 
         return $this->helperSet->get('dialog')->select($this->output, $question, $options, $default, $attempts, $errorMessage);
+    }
+
+    /**
+     * @param string $question
+     * @param array $options
+     * @param mixed $default
+     * @return string The answer
+     */
+    public function choice($question, array $options, $allowEmptyChoice = true, $default = null)
+    {
+        $this->write($question);
+
+        foreach ($options as $key => $option) {
+            $this->write(sprintf('[%s] %s', $key, $option));
+        }
+
+        $validValues = array_keys($options);
+        $validator = function ($choosenValue) use ($validValues, $allowEmptyChoice, $default) {
+            $isValidValue = in_array($choosenValue, $validValues);
+            $isAllowedEmpty = empty($choosenValue) && $allowEmptyChoice;
+
+            if ($isValidValue) {
+                return  $choosenValue;
+            } elseif ($isAllowedEmpty) {
+                return $default;
+            }
+
+            throw new \Exception(sprintf('Value "%s" is invalid', $choosenValue));
+        };
+
+        $message = 'Choose' . ($allowEmptyChoice ? ' (ENTER for no choice)' : '') . ': ';
+
+        return $this->askAndValidate($message, $validator, false, null);
     }
 }

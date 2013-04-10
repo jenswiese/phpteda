@@ -159,7 +159,10 @@ class Configurator
                 }
             } elseif ($property instanceof PropertySelection) {
                 $selectedProperty = $property->getSelectedProperty();
-                $this->configuredGenerator->{$selectedProperty->getName()}($selectedProperty->getValue());
+
+                if ($selectedProperty instanceof Property) {
+                    $this->configuredGenerator->{$selectedProperty->getName()}($selectedProperty->getValue());
+                }
             }
         }
     }

@@ -65,12 +65,11 @@ class GenerateCommand extends Command
         }
 
         $pathname = sprintf(
-            '%s' . DIRECTORY_SEPARATOR . '%s',
+            '%s' . DIRECTORY_SEPARATOR . '%sGenerator.php',
             $this->getConfig()->getGeneratorDirectory(),
-            $input->getArgument('generator-file') . 'Generator.php'
+            $input->getArgument('generator-file')
         );
         $this->configurator = Configurator::createByGeneratorPathname($pathname);
-
         $this->configureAndRunGenerator();
 
         $this->getIO()->write('Finished generation.');
@@ -107,10 +106,11 @@ class GenerateCommand extends Command
 
     protected function configurePropertySelection(PropertySelection $selection)
     {
-        $selectedKey = $this->getIO()->select($selection->getName(), $selection->getOptions());
-        $selection->setSelectedOptionByKey($selectedKey);
+        $selectedKey = $this->getIO()->choice($selection->getName(), $selection->getOptions());
+        if (!is_null($selectedKey)) {
+            $selection->setSelectedOptionByKey($selectedKey);
+        }
     }
-
 
     protected function configurePropertyGroup(PropertyGroup $group)
     {

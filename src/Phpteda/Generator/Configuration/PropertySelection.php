@@ -82,6 +82,10 @@ class PropertySelection
      */
     public function getSelectedProperty()
     {
+        if (!isset($this->properties[$this->selectedIndex])) {
+            return null;
+        }
+
         return $this->properties[$this->selectedIndex];
     }
 }
