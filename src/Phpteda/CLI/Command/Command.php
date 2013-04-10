@@ -5,6 +5,8 @@ namespace Phpteda\CLI\Command;
 use Phpteda\CLI\Application;
 use Phpteda\CLI\IO\ConsoleIO;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class Command
@@ -37,4 +39,14 @@ abstract class Command extends SymfonyCommand
     {
         return parent::getApplication();
     }
+
+    public function run(InputInterface $input, OutputInterface $output)
+    {
+        $this->getIO()->write($this->getApplication()->getLongVersion());
+        $this->getIO()->write('');
+
+        return parent::run($input, $output);
+    }
+
+
 }

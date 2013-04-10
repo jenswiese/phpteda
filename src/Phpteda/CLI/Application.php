@@ -30,8 +30,8 @@ class Application extends SymfonyApplication
      */
     public function __construct(Config $config)
     {
-        $name = "Phpteda";
-        $version = "0.9-dev";
+        $name = "phpteda";
+        $version = "1.0-alpha";
         $this->config = $config;
 
         parent::__construct($name, $version);
@@ -51,9 +51,6 @@ class Application extends SymfonyApplication
     public function doRun(InputInterface $input, OutputInterface $output)
     {
         $this->io = new ConsoleIO($input, $output, $this->getHelperSet());
-
-        $this->io->write($this->getLongVersion());
-        $this->io->write('');
 
         return parent::doRun($input, $output);
     }
