@@ -2,6 +2,10 @@
 
 namespace Phpteda\CLI;
 
+use Phpteda\CLI\Command\CreateGeneratorCommand;
+use Phpteda\CLI\Command\InitCommand;
+use Phpteda\CLI\Command\ShowCommand;
+use Phpteda\CLI\Command\GenerateCommand;
 use Phpteda\CLI\IO\ConsoleIO;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -35,6 +39,11 @@ class Application extends SymfonyApplication
         $this->config = $config;
 
         parent::__construct($name, $version);
+
+        $this->add(new InitCommand());
+        $this->add(new CreateGeneratorCommand());
+        $this->add(new ShowCommand());
+        $this->add(new GenerateCommand());
     }
 
     /**

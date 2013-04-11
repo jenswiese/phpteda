@@ -27,7 +27,4 @@ if ($configuration->hasBootstrapPathname()) {
 }
 
 $application = new Application($configuration);
-$application->add(new InitCommand());
-$application->add(new ShowCommand());
-$application->add(new GenerateCommand());
 $application->run();

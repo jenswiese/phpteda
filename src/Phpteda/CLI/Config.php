@@ -15,7 +15,10 @@ namespace Phpteda\CLI;
  * @method setBootstrapPathname(string $path)
  * @method bool hasBootstrapPathname()
  * @method string getBootstrapPathname()
-
+ *
+ * @method setGeneratorNamespace(string $namespace)
+ * @method bool hasGeneratorNamespace()
+ * @method string getGeneratorNamespace()
  *
  */
 class Config
