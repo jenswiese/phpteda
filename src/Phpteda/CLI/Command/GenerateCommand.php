@@ -54,7 +54,7 @@ class GenerateCommand extends Command
             $this->getIO()->setArgument(
                 'generator-file',
                 $this->getIO()->askWithSuggestions(
-                    '<question>Which generator to take?</question> ',
+                    'Which generator to take?',
                     $generatorDirectory->getGeneratorNames()
                 )
             );
@@ -72,7 +72,7 @@ class GenerateCommand extends Command
         $this->configurator = Configurator::createByGeneratorPathname($pathname);
         $this->configureAndRunGenerator();
 
-        $this->getIO()->write('Finished generation.');
+        $this->getIO()->writeInfo('Finished generation.');
     }
 
     protected function configureAndRunGenerator()
@@ -87,11 +87,8 @@ class GenerateCommand extends Command
 
         $generator = $this->configurator->getConfiguredGenerator();
 
-        $amount = $this->getIO()->ask('<question>How many [1]?</question> ', 1);
-        $shouldRemoveExistingData = $this->getIO()->askConfirmation(
-            '<question>Remove existing data [y/N]?</question> ',
-            false
-        );
+        $amount = $this->getIO()->ask('How many?', 1);
+        $shouldRemoveExistingData = $this->getIO()->askConfirmation('Remove existing data?', false);
 
         if ($shouldRemoveExistingData) {
             $generator->shouldRemoveExistingData();
@@ -103,10 +100,7 @@ class GenerateCommand extends Command
 
     protected function configurePropertySelection(PropertySelection $selection)
     {
-        $this->getIO()->write('');
-
-        $question = sprintf('<question>%s:</question>', $selection->getName());
-        $selectedKey = $this->getIO()->choice($question, $selection->getOptions());
+        $selectedKey = $this->getIO()->choice($selection->getName(), $selection->getOptions());
         if (!is_null($selectedKey)) {
             $selection->setSelectedOptionByKey($selectedKey);
         }
@@ -114,19 +108,13 @@ class GenerateCommand extends Command
 
     protected function configurePropertyGroup(PropertyGroup $group)
     {
-        $this->getIO()->write('');
-        $this->getIO()->write('<question>' . $group->getName() . ':</question>');
+        $this->getIO()->writeHeader($group->getName());
 
         foreach ($group->getProperties() as $property) {
-            $question = $property->getQuestion() . ' %s ';
-            $defaultValue = false;
-
             if ($property->isBool()) {
-                $question = sprintf($question, ' [y/N]?');
-                $answer = $this->getIO()->askConfirmation($question, $defaultValue);
+                $answer = $this->getIO()->askConfirmation($property->getQuestion(), false);
             } else {
-                $question = sprintf($question, ' []:');
-                $answer = $this->getIO()->ask($question, $defaultValue);
+                $answer = $this->getIO()->ask($property->getQuestion());
             }
 
             $property->setValue($answer);

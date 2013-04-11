@@ -58,12 +58,54 @@ class ConsoleIO
     }
 
     /**
-     * @param string $messages
+     * @param string $message
      * @param bool $newline
      */
-    public function write($messages, $newline = true)
+    public function write($message, $newline = true)
     {
-        $this->output->write($messages, $newline);
+        $this->output->write($message, $newline);
+    }
+
+    /**
+     * @param string $message
+     * @param bool $newline
+     */
+    public function writeInfo($message, $newline = true)
+    {
+        $message = sprintf('<info>%s</info>', $message);
+        $this->write($message, $newline);
+    }
+
+    /**
+     * @param string $message
+     * @param bool $newline
+     */
+    public function writeComment($message, $newline = true)
+    {
+        $message = sprintf('<comment>%s</comment>', $message);
+        $this->write($message, $newline);
+    }
+
+    /**
+     * @param string $message
+     * @param bool $newline
+     */
+    public function writeError($message, $newline = true)
+    {
+        $message = sprintf('<error>%s</error>', $message);
+        $this->write($message, $newline);
+    }
+
+    /**
+     * @param $message
+     */
+    public function writeHeader($message)
+    {
+        $message = $message . ':';
+
+        $this->write('');
+        $this->writeComment($message);
+        $this->writeComment(str_pad('', strlen($message), '-'));
     }
 
     /**
@@ -73,6 +115,9 @@ class ConsoleIO
      */
     public function ask($question, $default = null)
     {
+        $choiceInfo = is_null($default) ? '' : sprintf(' [%s]', $default);
+        $question = sprintf('<question>%s</question>%s: ', $question, $choiceInfo);
+
         return $this->helperSet->get('dialog')->ask($this->output, $question, $default);
     }
 
@@ -83,6 +128,13 @@ class ConsoleIO
      */
     public function askConfirmation($question, $default = true)
     {
+        $choiceInfo = sprintf(
+            '[%s/%s]',
+            ($default === true ? 'Y' : 'y'),
+            ($default === false ? 'N' : 'n')
+        );
+        $question = sprintf('<question>%s</question> %s: ', $question, $choiceInfo);
+
         return $this->helperSet->get('dialog')->askConfirmation($this->output, $question, $default);
     }
 
@@ -95,6 +147,9 @@ class ConsoleIO
      */
     public function askAndValidate($question, $validator, $attempts = false, $default = null)
     {
+        $choiceInfo = is_null($default) ? '' : sprintf(' [%s]', $default);
+        $question = sprintf('<question>%s</question>%s: ', $question, $choiceInfo);
+
         return $this->helperSet->get('dialog')->askAndValidate(
             $this->output,
             $question,
@@ -112,21 +167,10 @@ class ConsoleIO
      */
     public function askWithSuggestions($question, array $suggestions, $default = null)
     {
+        $choiceInfo = is_null($default) ? '' : sprintf(' [%s]', $default);
+        $question = sprintf('<question>%s</question>%s: ', $question, $choiceInfo);
+
         return $this->helperSet->get('dialog')->ask($this->output, $question, $default, $suggestions);
-    }
-
-    /**
-     * @param string $question
-     * @param array $options
-     * @param mixed $default
-     * @return string The answer
-     */
-    public function select($question, array $options, $default = null)
-    {
-        $attempts = false;
-        $errorMessage = 'Value "%s" is invalid';
-
-        return $this->helperSet->get('dialog')->select($this->output, $question, $options, $default, $attempts, $errorMessage);
     }
 
     /**
@@ -141,7 +185,7 @@ class ConsoleIO
      */
     public function choice($question, array $options, $allowEmptyChoice = true, $default = null)
     {
-        $this->write($question);
+        $this->writeHeader($question);
 
         foreach ($options as $key => $option) {
             $this->write(sprintf('[%s] %s', $key, $option));

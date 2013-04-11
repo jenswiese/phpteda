@@ -42,17 +42,17 @@ class InitCommand extends Command
     {
         while (true) {
             $directory = $this->getIO()->askWithSuggestions(
-                "<question>Provide directory for Generators:</question> [" . $this->getConfig()->getGeneratorDirectory() . "] ",
+                "Provide directory for Generators",
                 $this->getAvailableGeneratorDirectories(),
                 $this->getConfig()->getGeneratorDirectory()
             );
 
             if (is_dir(realpath($directory))) {
-                $this->getIO()->write("Writing '" . realpath($directory) . "' to configfile.");
+                $this->getIO()->writeInfo("Writing '" . realpath($directory) . "' to configfile.");
                 $this->getConfig()->setGeneratorDirectory(realpath($directory));
                 break;
             }
-            $this->getIO()->write('<error>This is not a valid directory.</error>');
+            $this->getIO()->writeError('This is not a valid directory.');
         }
     }
 
@@ -60,7 +60,7 @@ class InitCommand extends Command
     {
         while (true) {
             $bootstrapPathname = $this->getIO()->askWithSuggestions(
-                "<question>Provide path for bootstrap file:</question> [" . $this->getConfig()->getBootstrapPathname() . "] ",
+                "Provide path for bootstrap file",
                 $this->getAvailableBootstrapPathnames(),
                 $this->getConfig()->getBootstrapPathname()
             );
@@ -70,11 +70,11 @@ class InitCommand extends Command
             }
 
             if (is_file(realpath($bootstrapPathname))) {
-                $this->getIO()->write("Writing '" . realpath($bootstrapPathname) . "' to configfile.");
+                $this->getIO()->writeInfo("Writing '" . realpath($bootstrapPathname) . "' to configfile.");
                 $this->getConfig()->setBootstrapPathname(realpath($bootstrapPathname));
                 break;
             }
-            $this->getIO()->write('<error>This is not a valid file.</error>');
+            $this->getIO()->writeError('This is not a valid file.');
         }
     }
 

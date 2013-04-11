@@ -40,10 +40,10 @@ class ShowCommand extends Command
 
         $this->getIO()->write('<comment>Using:</comment> ' . $this->getConfig()->getGeneratorDirectory());
 
-        $table = Table::create($this->getIO(), $this->getApplication()->getTerminalWidth())
-            ->addRow()
-                ->addColumn('<comment>Generator</comment>')
-                ->addColumn('<comment>Description</comment>');
+        $table = Table::create($this->getIO(), $this->getApplication()->getTerminalWidth());
+        $table->addRow()
+            ->addColumn('<comment>Generator</comment>')
+            ->addColumn('<comment>Description</comment>');
 
         foreach ($this->getDirectoryIterator() as $generatorFile) {
             $description = ReflectionClass::createByPathname($generatorFile->getPathname())
