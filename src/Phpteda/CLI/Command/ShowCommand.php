@@ -40,7 +40,9 @@ class ShowCommand extends Command
 
         $this->getIO()->write('<comment>Using:</comment> ' . $this->getConfig()->getGeneratorDirectory());
 
-        $table = Table::create($this->getIO(), $this->getApplication()->getTerminalWidth());
+        $width = min(100, $this->getApplication()->getTerminalWidth());
+
+        $table = Table::create($this->getIO(), $width);
         $table->addRow()
             ->addColumn('<comment>Generator</comment>')
             ->addColumn('<comment>Description</comment>');
