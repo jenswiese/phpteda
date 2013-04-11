@@ -40,25 +40,23 @@ class CreateGeneratorCommand extends Command
 
         $this->getIO()->write('<comment>Using:</comment> ' . $this->getConfig()->getGeneratorDirectory());
 
-        $name = $this->getIO()->ask('<question>Name of Generator:</question> ');
-        $description = $this->getIO()->ask('<question>Description:</question> ');
-        $namespace = $this->getIO()->ask(
-            '<question>Namespace: [' . $this->getConfig()->getGeneratorNamespace() . ']</question> ',
-            $this->getConfig()->getGeneratorNamespace()
-        );
-
+        $name = $this->getIO()->ask('Name of Generator');
+        $description = $this->getIO()->ask('Description');
+        $namespace = $this->getIO()->ask('Namespace', $this->getConfig()->getGeneratorNamespace());
         $this->getConfig()->setGeneratorNamespace($namespace);
 
         $filepath = $this->getConfig()->getGeneratorDirectory() . DIRECTORY_SEPARATOR . $name .  'Generator.php';
-
         if (file_exists($filepath)) {
-            $overwriteExistingFile = $this->getIO()->askConfirmation('File already exists, overwrite it [y/N]', false);
+            $overwriteExistingFile = $this->getIO()->askConfirmation('File already exists, overwrite it?', false);
+            if (!$overwriteExistingFile) {
+                $this->getIO()->writeInfo('Skipped generation, nothing happened.');
+                return;
+            }
         }
-
 
         file_put_contents($filepath, $this->getGeneratorCode($name, $description, $namespace));
 
-        $this->getIO()->write('Generated file "' . $filepath . '".');
+        $this->getIO()->writeInfo('Generated file "' . $filepath . '".');
     }
 
     /**
