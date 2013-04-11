@@ -125,6 +125,8 @@ class AnnotationReader
      */
     public function getGroupedMethods()
     {
+        $methods = array();
+
         foreach ($this->getUntaggedMethodAnnotations() as $methodString) {
             $methods['Common'][] = new Method($this->parseMagicMethodAnnotation($methodString));
         }
