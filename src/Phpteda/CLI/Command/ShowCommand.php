@@ -42,12 +42,18 @@ class ShowCommand extends Command
 
         $width = min(100, $this->getApplication()->getTerminalWidth());
 
+        $directoryIterator = $this->getDirectoryIterator();
+        if (0 == iterator_count($directoryIterator)) {
+            $this->getIO()->writeInfo('No Generator file found in given directory. Run "create-generator" command first');
+            return;
+        }
+
         $table = Table::create($this->getIO(), $width);
         $table->addRow()
             ->addColumn('<comment>Generator</comment>')
             ->addColumn('<comment>Description</comment>');
 
-        foreach ($this->getDirectoryIterator() as $generatorFile) {
+        foreach ($directoryIterator as $generatorFile) {
             $description = ReflectionClass::createByPathname($generatorFile->getPathname())
                 ->getAnnotationReader()->getDescription();
 

@@ -6,9 +6,9 @@ use DirectoryIterator;
 use FilterIterator;
 
 /**
- * Class for ...
+ * Class for iterating generator directories
  *
- * @author jens
+ * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-03-16
  */
 class GeneratorDirectoryIterator extends FilterIterator
@@ -32,6 +32,10 @@ class GeneratorDirectoryIterator extends FilterIterator
         $entry = $this->getInnerIterator()->current();
 
         if (!$entry->isFile()) {
+            return false;
+        }
+
+        if ('Generator.php' == $entry->getFilename()) {
             return false;
         }
 
