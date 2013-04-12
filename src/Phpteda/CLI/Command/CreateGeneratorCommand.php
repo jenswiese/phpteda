@@ -74,6 +74,7 @@ class CreateGeneratorCommand extends Command
 namespace %s;
 
 use Faker\Factory;
+use Phpteda\Generator\AbstractGenerator;
 
 /**
  * %s
@@ -82,7 +83,7 @@ use Faker\Factory;
  * @since %s
  *
  */
-class %sGenerator extends \Phpteda\Generator\AbstractGenerator
+class %sGenerator extends AbstractGenerator
 {
     /**
      * Implements custom way to delete existing data
@@ -92,26 +93,6 @@ class %sGenerator extends \Phpteda\Generator\AbstractGenerator
     protected function removeExistingData()
     {
         // @todo: implement removing of your data
-    }
-
-    /**
-     * Implements custom behaviour prior generation (e.g. for XML-head)
-     *
-     * @return self
-     */
-    protected function preGeneration()
-    {
-        // @todo: implement or remove method if not needed
-    }
-
-    /**
-     * Implements custom behaviour after generation (e.g. for XML-head)
-     *
-     * @return self
-     */
-    protected function postGeneration()
-    {
-        // @todo: implement or remove method if not needed
     }
 
     /**
