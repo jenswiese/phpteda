@@ -95,11 +95,21 @@ class %sGenerator extends \Phpteda\Generator\AbstractGenerator
     }
 
     /**
-     * Implements custom behaviour prior to generation (e.g. for XML-head)
+     * Implements custom behaviour prior generation (e.g. for XML-head)
      *
      * @return self
      */
     protected function preGeneration()
+    {
+        // @todo: implement or remove method if not needed
+    }
+
+    /**
+     * Implements custom behaviour after generation (e.g. for XML-head)
+     *
+     * @return self
+     */
+    protected function postGeneration()
     {
         // @todo: implement or remove method if not needed
     }
