@@ -87,13 +87,22 @@ class %sGenerator extends \Phpteda\Generator\AbstractGenerator
     /**
      * Implements custom way to delete existing data
      *
-     * @return AbstractGenerator
+     * @return self
      */
     protected function removeExistingData()
     {
         // @todo: implement removing of your data
     }
 
+    /**
+     * Implements custom behaviour prior to generation (e.g. for XML-head)
+     *
+     * @return self
+     */
+    protected function preGeneration()
+    {
+        // @todo: implement or remove method if not needed
+    }
 
     /**
      * Implements custom generator behaviour

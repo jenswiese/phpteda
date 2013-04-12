@@ -94,9 +94,13 @@ abstract class AbstractGenerator implements GeneratorInterface
             $this->removeExistingData();
         }
 
+        $this->preGeneration();
+
         for ($i = 0; $i < $amount; $i++) {
             $this->generateData();
         }
+
+        $this->postGeneration();
 
         $this->reset();
     }
@@ -151,6 +155,18 @@ abstract class AbstractGenerator implements GeneratorInterface
         $this->options = new Options();
         $this->shouldRemoveExistingData = false;
     }
+
+    /**
+     * Implement custom behaviour prior to generation (e.g. header of file)
+     */
+    protected function preGeneration()
+    {}
+
+    /**
+     * Implement custom behaviour after to generation (e.g. header of file)
+     */
+    protected function postGeneration()
+    {}
 
     /**
      * Implements custom way to delete existing data
