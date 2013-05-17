@@ -77,7 +77,7 @@ class XMLConfigurationReaderTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends testReadingGroupWithProperty
      */
-    public function testReadingGroupWithBooleanPropertyWithOptions()
+    public function testReadingGroupWithPropertyWithOptions()
     {
         $xml = '
             <config>
