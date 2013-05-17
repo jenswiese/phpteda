@@ -2,8 +2,6 @@
 
 namespace Phpteda\Generator\Configuration;
 
-use Phpteda\Reflection\Method\Method;
-
 /**
  * Class PropertyGroup
  *
@@ -27,20 +25,11 @@ class PropertyGroup
     }
 
     /**
-     * @param Method[] $methods
+     * @param PropertyInterface $property
      */
-    public function fromMethodArray(array $methods)
+    public function addProperty(PropertyInterface $property)
     {
-        foreach ($methods as $method) {
-            if (!$method->hasDescription()) {
-                continue;
-            }
-
-            $property = new Property();
-            $property->fromMethodObject($method);
-
-            $this->properties[] = $property;
-        }
+        $this->properties[] = $property;
     }
 
     /**

@@ -2,18 +2,17 @@
 
 namespace Phpteda\Generator\Configuration;
 
-use Phpteda\Reflection\Method\Method;
-
 /**
  * Class that holds property to configure generator
  *
  * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-03-19
  */
-class Property
+class Property implements PropertyInterface
 {
     const TYPE_BOOL = 1;
     const TYPE_MIXED = 2;
+    const TYPE_WITH_OPTION = 3;
 
     /** @var string */
     protected $name;
@@ -27,6 +26,9 @@ class Property
     /** @var int */
     protected $type;
 
+    /** @var array */
+    protected $options = array();
+
     /**
      * @param array $data
      */
@@ -36,18 +38,8 @@ class Property
         $this->value = $data['value'];
         $this->question = $data['question'];
         $this->type = $data['type'];
-    }
+        $this->options = $data['options'];
 
-    /**
-     * @param Method $method
-     */
-    public function fromMethodObject(Method $method)
-    {
-        $this->setName($method->getName());
-        $this->setQuestion($method->getDescription());
-        $type = $method->hasParameter() ? self::TYPE_MIXED : self::TYPE_BOOL;
-        $this->setType($type);
-        $this->value = null;
     }
 
     /**
@@ -115,6 +107,31 @@ class Property
     }
 
     /**
+     * @param string $name
+     * @param string $value
+     */
+    public function addOption($name, $value)
+    {
+        $this->options[$name] = $value;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasOptions()
+    {
+        return !empty($this->options);
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
      * @return bool
      */
     public function isBool()
@@ -132,6 +149,7 @@ class Property
         $data['value'] = $this->value;
         $data['question'] = $this->question;
         $data['type'] = $this->type;
+        $data['options'] = $this->options;
 
         return $data;
     }
