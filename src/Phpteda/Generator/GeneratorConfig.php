@@ -51,17 +51,17 @@ class GeneratorConfig
             if ($this->xmlReader->isGroup()) {
                 $groupTitle = $this->xmlReader->getAttribute('title');
                 $this->propertyGroups[$groupTitle] = new PropertyGroup($groupTitle);
-            } elseif ($this->xmlReader->isProperty()) {
-                $property = new Property();
-                $property->setName($this->xmlReader->getAttribute('name'));
-                $property->setQuestion($this->xmlReader->getElementValue());
-                $property->setType(Property::TYPE_MIXED);
-                $this->propertyGroups[$groupTitle]->addProperty($property);
             } elseif ($this->xmlReader->isBooleanProperty()) {
                 $property = new Property();
                 $property->setName($this->xmlReader->getAttribute('name'));
                 $property->setQuestion($this->xmlReader->getElementValue());
                 $property->setType(Property::TYPE_BOOL);
+                $this->propertyGroups[$groupTitle]->addProperty($property);
+            } elseif ($this->xmlReader->isProperty()) {
+                $property = new Property();
+                $property->setName($this->xmlReader->getAttribute('name'));
+                $property->setQuestion($this->xmlReader->getElementValue());
+                $property->setType(Property::TYPE_MIXED);
                 $this->propertyGroups[$groupTitle]->addProperty($property);
             } elseif ($this->xmlReader->isPropertyWithOptions()) {
                 $property = new Property();

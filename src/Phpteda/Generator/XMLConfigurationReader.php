@@ -87,7 +87,7 @@ class XMLConfigurationReader
      */
     public function isPropertyWithOptions()
     {
-        return ('property' == $this->reader->localName && $this->hasChildElements());
+        return ('property' == $this->getElementName() && $this->hasChildElements());
     }
 
     /**
@@ -95,7 +95,7 @@ class XMLConfigurationReader
      */
     public function isBooleanProperty()
     {
-        return ('boolean' == $this->reader->localName);
+        return (('property' == $this->getElementName()) && ('boolean' == $this->getAttribute('type')));
     }
 
     /**

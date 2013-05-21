@@ -94,7 +94,6 @@ abstract class AbstractGenerator implements GeneratorInterface
      */
     public function __call($name, $arguments)
     {
-var_dump($name, $arguments);
         if (empty($arguments)) {
             $this->options->setBooleanOption($name);
         } else {

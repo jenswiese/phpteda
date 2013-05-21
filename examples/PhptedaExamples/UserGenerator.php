@@ -42,8 +42,8 @@ class UserGenerator extends \Phpteda\Generator\AbstractGenerator
                         <option value="deleted">Only deleted users</option>
                         <option value="blocked">Only blocked users</option>
                     </property>
-                    <boolean name="createdAtToday">Users should be created today?</boolean>
-                    <boolean name="noEmail">Users should contain no email?</boolean>
+                    <property name="createdAtToday" type="boolean">Users should be created today?</property>
+                    <property name="noEmail" type="boolean">Users should contain no email?</property>
                     <property name="withUserCategory">Which user category should be taken?</property>
                 </group>
             </config>

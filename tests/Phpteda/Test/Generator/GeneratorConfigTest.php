@@ -55,7 +55,7 @@ class GeneratorConfigTest extends \PHPUnit_Framework_TestCase
         $xml = '
             <config>
                 <group title="Test Group">
-                    <boolean name="testProperty1">Yes or no?</boolean>
+                    <property name="testProperty1" type="boolean">Yes or no?</property>
                 </group>
             </config>
         ';
@@ -69,7 +69,7 @@ class GeneratorConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('testProperty1', $properties[0]->getName());
         $this->assertNull($properties[0]->getValue());
         $this->assertEquals('Yes or no', $properties[0]->getQuestion());
-        $this->assertTrue($properties[0]->isBool());
+        $this->assertTrue($properties[0]->isBool(), 'Should be type "boolean".');
         $this->assertEmpty($properties[0]->getOptions());
     }
 
