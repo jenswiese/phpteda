@@ -9,7 +9,7 @@ use Phpteda\Generator\XMLConfigurationReader;
 /**
  * Class GeneratorConfig
  *
- * @author jens
+ * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-05-10
  */
 class GeneratorConfig

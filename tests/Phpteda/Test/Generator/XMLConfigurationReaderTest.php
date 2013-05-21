@@ -7,7 +7,7 @@ use Phpteda\Generator\XMLConfigurationReader;
 /**
  * Class for ...
  *
- * @author jens
+ * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-05-12
  */
 class XMLConfigurationReaderTest extends \PHPUnit_Framework_TestCase

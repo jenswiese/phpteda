@@ -7,7 +7,7 @@ use Phpteda\Reflection\AnnotationReader;
 /**
  * Class for ...
  *
- * @author jens
+ * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-03-25
  */
 class AnnotationReaderTest extends \PHPUnit_Framework_TestCase

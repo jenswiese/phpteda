@@ -7,7 +7,7 @@ use XMLReader;
 /**
  * Class XMLConfigurationReader
  *
- * @author jens
+ * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-05-10
  */
 class XMLConfigurationReader

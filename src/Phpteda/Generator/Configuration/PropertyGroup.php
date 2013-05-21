@@ -5,7 +5,7 @@ namespace Phpteda\Generator\Configuration;
 /**
  * Class PropertyGroup
  *
- * @author jens
+ * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-03-26
  */
 class PropertyGroup

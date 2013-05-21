@@ -8,7 +8,7 @@ use RuntimeException;
 /**
  * Class for retrieving infos about class (e.g. annotations, description)
  *
- * @author jens
+ * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-03-11
  */
 class ReflectionClass
