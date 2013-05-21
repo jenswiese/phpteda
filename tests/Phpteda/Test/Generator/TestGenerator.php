@@ -12,19 +12,26 @@ use Phpteda\Generator\AbstractGenerator;
  * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-03-10
  *
- * @fakerProvider \Phpteda\Test\Generator\TestFakerProvider
- *
- * @method TestGenerator isActive() Should entries be active
- * @method TestGenerator withValue($value) Provide value
- *
- * <select name="Job Approval">
- * @method TestGenerator isActive2() Should entries be active
- * @method TestGenerator withValue2($value) Provide value
- * </select>
  */
 class TestGenerator extends AbstractGenerator
 {
     protected $verificationMock;
+
+    /**
+     * @return string
+     */
+    public function getLocale()
+    {
+        return 'de_AT';
+    }
+
+    /**
+     * @return array
+     */
+    public function getProviders()
+    {
+        return array('\Phpteda\Test\Generator\DummyTestDataProvider');
+    }
 
     /**
      * @param MockInterface $verificationMock

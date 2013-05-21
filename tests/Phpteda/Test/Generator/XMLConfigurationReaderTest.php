@@ -46,7 +46,7 @@ class XMLConfigurationReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('testProperty1', $this->reader->getAttribute('name'));
         $this->assertEquals('Enter value', $this->reader->getElementValue());
 
-        $this->assertNull($this->reader->read());
+        $this->assertFalse($this->reader->read());
     }
 
     /**
@@ -57,7 +57,7 @@ class XMLConfigurationReaderTest extends \PHPUnit_Framework_TestCase
         $xml = '
             <config>
                 <group title="Test Group">
-                    <boolean name="testProperty1">Enter yes or no</boolean>
+                    <property name="testProperty1" type="boolean">Enter yes or no</property>
                 </group>
             </config>
         ';
@@ -71,7 +71,7 @@ class XMLConfigurationReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('testProperty1', $this->reader->getAttribute('name'));
         $this->assertEquals('Enter yes or no', $this->reader->getElementValue());
 
-        $this->assertNull($this->reader->read());
+        $this->assertFalse($this->reader->read());
     }
 
     /**

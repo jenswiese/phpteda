@@ -162,16 +162,6 @@ abstract class AbstractGenerator implements GeneratorInterface
     }
 
     /**
-     * @return string[]
-     */
-    protected function getProvidersByConfig()
-    {
-        $reader = new XMLConfigurationReader();
-
-        return $reader->getProviders();
-    }
-
-    /**
      * Resets current generation process
      */
     protected function reset()

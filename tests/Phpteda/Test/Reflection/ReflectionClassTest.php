@@ -21,7 +21,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         $classReader = new ReflectionClass('Phpteda\Test\Reflection\TestClassForReflection');
 
-        $actualDescription = $classReader->getAnnotationReader()->getDescription();
+        $actualDescription = $classReader->getDescription();
         $expectedDescription = 'This is a test class for class reflection, nothing more, nothing less';
 
         $this->assertEquals($expectedDescription, $actualDescription);
