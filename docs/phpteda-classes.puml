@@ -1,26 +1,45 @@
 @startuml
 
-abstract class AbstractList
-abstract AbstractCollection
-interface List
-interface Collection
 
-List <|-- AbstractList
-Collection <|-- AbstractCollection
+class Configuration.Property {
 
-Collection <|- List
-AbstractCollection <|- AbstractList
-AbstractList <|-- ArrayList
-
-class ArrayList {
-Object[] elementData
-size()
 }
 
-enum TimeUnit {
-DAYS
-HOURS
-MINUTES
+class Configuration.Selection {
+
 }
+
+class Configuration.Group {
+
+}
+
+class GeneratorConfigurator {
+    createByGeneratorClassName($className):GeneratorConfigurator
+    createByGeneratorPathname($pathname):GeneratorConfigurator
+    getConfigurationProperties():Property[]
+    getConfiguredGenerator():GeneratorInterface
+}
+
+class Generator {
+    getConfig():string
+}
+
+
+XMLReader <|-- ConfigReader
+
+class XMLReader {
+}
+
+class ConfigReader {
+isGroup()
+isBoolean()
+isProperty()
+isChoice()
+isDecision()
+}
+
+
+
+
 
 @enduml
