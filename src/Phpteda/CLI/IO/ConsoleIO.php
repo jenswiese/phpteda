@@ -101,6 +101,10 @@ class ConsoleIO
      */
     public function writeHeader($message)
     {
+        if (empty($message)) {
+            return;
+        }
+
         $message = $message . ':';
 
         $this->write('');
