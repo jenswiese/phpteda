@@ -34,10 +34,10 @@ class GeneratorConfigTest extends \PHPUnit_Framework_TestCase
         $propertyGroups = $this->config->readFromXml($xml)->getPropertyGroups();
 
         $this->assertCount(1, $propertyGroups, 'Expected count of groups is wrong.');
-        $this->assertEquals('Test Group', $propertyGroups['Test Group']->getName());
+        $this->assertEquals('Test Group', $propertyGroups[0]->getName());
 
         /** @var Property[] $properties */
-        $properties = $propertyGroups['Test Group']->getProperties();
+        $properties = $propertyGroups[0]->getProperties();
 
         $this->assertCount(1, $properties, 'Expected count of properties is wrong.');
         $this->assertEquals('testProperty1', $properties[0]->getName());
@@ -63,7 +63,7 @@ class GeneratorConfigTest extends \PHPUnit_Framework_TestCase
         $propertyGroups = $this->config->readFromXml($xml)->getPropertyGroups();
 
         /** @var Property[] $properties */
-        $properties = $propertyGroups['Test Group']->getProperties();
+        $properties = $propertyGroups[0]->getProperties();
 
         $this->assertCount(1, $properties, 'Expected count of properties is wrong.');
         $this->assertEquals('testProperty1', $properties[0]->getName());
@@ -93,7 +93,7 @@ class GeneratorConfigTest extends \PHPUnit_Framework_TestCase
         $propertyGroups = $this->config->readFromXml($xml)->getPropertyGroups();
 
         /** @var Property[] $properties */
-        $properties = $propertyGroups['Test Group']->getProperties();
+        $properties = $propertyGroups[0]->getProperties();
 
         $this->assertCount(1, $properties, 'Expected count of properties is wrong.');
         $this->assertTrue($properties[0]->hasOptions());
@@ -124,7 +124,7 @@ class GeneratorConfigTest extends \PHPUnit_Framework_TestCase
         $propertyGroups = $this->config->readFromXml($xml)->getPropertyGroups();
 
         /** @var Property[] $properties */
-        $properties = $propertyGroups['Test Group']->getProperties();
+        $properties = $propertyGroups[0]->getProperties();
 
         $this->assertCount(2, $properties, 'Expected count of properties is wrong.');
         $this->assertEquals('testProperty1', $properties[0]->getName());
@@ -154,12 +154,12 @@ class GeneratorConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $propertyGroups, 'Expected to have 2 groups.');
 
         /** @var Property[] $properties1 */
-        $properties1 = $propertyGroups['Test Group 1']->getProperties();
+        $properties1 = $propertyGroups[0]->getProperties();
         $this->assertCount(1, $properties1, 'Expected count of properties is wrong.');
         $this->assertEquals('testProperty1', $properties1[0]->getName());
 
         /** @var Property[] $properties1 */
-        $properties2 = $propertyGroups['Test Group 2']->getProperties();
+        $properties2 = $propertyGroups[1]->getProperties();
         $this->assertCount(2, $properties2, 'Expected count of properties is wrong.');
         $this->assertEquals('testProperty2', $properties2[0]->getName());
         $this->assertEquals('testProperty3', $properties2[1]->getName());

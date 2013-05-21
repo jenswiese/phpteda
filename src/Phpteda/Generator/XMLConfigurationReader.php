@@ -116,6 +116,16 @@ class XMLConfigurationReader
     }
 
     /**
+     * Returns unique identifier of current element
+     *
+     * @return string
+     */
+    public function getElementIdentifier()
+    {
+        return md5($this->reader->readInnerXml());
+    }
+
+    /**
      * @return string
      */
     public function getElementValue()

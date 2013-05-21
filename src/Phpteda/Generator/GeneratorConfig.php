@@ -50,19 +50,20 @@ class GeneratorConfig
         while ($this->xmlReader->read()) {
             if ($this->xmlReader->isGroup()) {
                 $groupTitle = $this->xmlReader->getAttribute('title');
-                $this->propertyGroups[$groupTitle] = new PropertyGroup($groupTitle);
+                $groupIdentifier = $this->xmlReader->getElementIdentifier();
+                $this->propertyGroups[$groupIdentifier] = new PropertyGroup($groupTitle);
             } elseif ($this->xmlReader->isBooleanProperty()) {
                 $property = new Property();
                 $property->setName($this->xmlReader->getAttribute('name'));
                 $property->setQuestion($this->xmlReader->getElementValue());
                 $property->setType(Property::TYPE_BOOL);
-                $this->propertyGroups[$groupTitle]->addProperty($property);
+                $this->propertyGroups[$groupIdentifier]->addProperty($property);
             } elseif ($this->xmlReader->isProperty()) {
                 $property = new Property();
                 $property->setName($this->xmlReader->getAttribute('name'));
                 $property->setQuestion($this->xmlReader->getElementValue());
                 $property->setType(Property::TYPE_MIXED);
-                $this->propertyGroups[$groupTitle]->addProperty($property);
+                $this->propertyGroups[$groupIdentifier]->addProperty($property);
             } elseif ($this->xmlReader->isPropertyWithOptions()) {
                 $property = new Property();
                 $property->setName($this->xmlReader->getAttribute('name'));
@@ -70,7 +71,7 @@ class GeneratorConfig
                 foreach ($this->xmlReader->getPropertyOptions() as $value => $name) {
                     $property->addOption($name, $value);
                 }
-                $this->propertyGroups[$groupTitle]->addProperty($property);
+                $this->propertyGroups[$groupIdentifier]->addProperty($property);
                 $this->xmlReader->next();
             }
         }
@@ -83,6 +84,6 @@ class GeneratorConfig
      */
     public function getPropertyGroups()
     {
-        return $this->propertyGroups;
+        return array_values($this->propertyGroups);
     }
 }
