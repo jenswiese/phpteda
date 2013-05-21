@@ -102,6 +102,7 @@ class ConsoleIO
     public function writeHeader($message)
     {
         if (empty($message)) {
+            $this->write('');
             return;
         }
 
