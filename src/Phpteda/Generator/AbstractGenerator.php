@@ -2,9 +2,8 @@
 
 namespace Phpteda\Generator;
 
-use Faker\Factory;
-use Faker\Generator;
-use Faker\Test\BarProvider;
+use Phpteda\TestData\Factory as TestDataFactory;
+use Phpteda\TestData\Generator as TestDataGenerator;
 use Phpteda\Reflection\ReflectionClass;
 
 /**
@@ -18,29 +17,29 @@ abstract class AbstractGenerator implements GeneratorInterface
     /** @var Options */
     protected $options;
 
-    /** @var \Faker\Generator */
-    protected $faker;
+    /** @var TestDataGenerator */
+    protected $testDataGenerator;
 
     /** @var bool */
     protected $shouldRemoveExistingData = false;
 
     /**
-     * @param Generator $faker
-     * @return AbstractGenerator
+     * @param TestDataGenerator $testDataGenerator
+     * @return $this
      */
-    public static function generate(Generator $faker = null)
+    public static function generate(TestDataGenerator $testDataGenerator = null)
     {
-        return new static($faker);
+        return new static($testDataGenerator);
     }
 
     /**
-     * @param Generator $faker
+     * @param TestDataGenerator $testDataGenerator
      * @throws \InvalidArgumentException
      */
-    protected function __construct(Generator $faker = null)
+    protected function __construct(TestDataGenerator $testDataGenerator = null)
     {
-        if (is_null($faker)) {
-            $faker = Factory::create($this->getLocale());
+        if (is_null($testDataGenerator)) {
+            $testDataGenerator = TestDataFactory::create($this->getLocale());
         }
 
         foreach ($this->getProviders() as $providerClass) {
@@ -48,10 +47,10 @@ abstract class AbstractGenerator implements GeneratorInterface
                 throw new \InvalidArgumentException("Provider '" . $providerClass . "' does not exist.");
             }
 
-            $faker->addProvider(new $providerClass($faker));
+            $testDataGenerator->addProvider(new $providerClass($testDataGenerator));
         }
 
-        $this->faker = $faker;
+        $this->testDataGenerator = $testDataGenerator;
         $this->options = new Options();
     }
 
@@ -76,10 +75,10 @@ abstract class AbstractGenerator implements GeneratorInterface
     }
 
     /**
-     * Returns providers for faker, override this method in order to
+     * Returns providers for TestDataGenerator, override this method in order to
      * define specific providers
      *
-     * @return array of Faker-providers
+     * @return array of TestDataGenerator providers
      */
     public function getProviders()
     {
@@ -155,11 +154,11 @@ abstract class AbstractGenerator implements GeneratorInterface
     }
 
     /**
-     * @return Generator
+     * @return TestDataGenerator
      */
-    public function getFaker()
+    public function getTestDataGenerator()
     {
-        return $this->faker;
+        return $this->testDataGenerator;
     }
 
     /**

@@ -69,19 +69,19 @@ class UserGenerator extends \Phpteda\Generator\AbstractGenerator
      */
     protected function generateData()
     {
-        $firstName = $this->faker->firstName;
-        $lastName = $this->faker->lastName;
-        $email = Choice::when($this->noEmail)->then(null)->otherwise($this->faker->safeEmail);
+        $firstName = $this->testDataGenerator->firstName;
+        $lastName = $this->testDataGenerator->lastName;
+        $email = Choice::when($this->noEmail)->then(null)->otherwise($this->testDataGenerator->safeEmail);
         $userCategory =
-            Choice::when($this->withUserCategory)->otherwise($this->faker->randomNumber(1, 3));
+            Choice::when($this->withUserCategory)->otherwise($this->testDataGenerator->randomNumber(1, 3));
         $createdAt =
             Choice::when($this->createdAtToday)
-            ->then($this->faker->dateTimeBetween('today'))
-            ->otherwise($this->faker->dateTimeBetween('-1 year', '-6 months'));
+            ->then($this->testDataGenerator->dateTimeBetween('today'))
+            ->otherwise($this->testDataGenerator->dateTimeBetween('-1 year', '-6 months'));
 
-        $isActive = Choice::when($this->activeUser)->then(true)->otherwise($this->faker->boolean);
-        $isDeleted = Choice::when($this->deletedUser)->then(true)->otherwise($this->faker->boolean);
-        $isBlocked = Choice::when($this->blockedUser)->then(true)->otherwise($this->faker->boolean);
+        $isActive = Choice::when($this->activeUser)->then(true)->otherwise($this->testDataGenerator->boolean);
+        $isDeleted = Choice::when($this->deletedUser)->then(true)->otherwise($this->testDataGenerator->boolean);
+        $isBlocked = Choice::when($this->blockedUser)->then(true)->otherwise($this->testDataGenerator->boolean);
 
         $user = new User();
         $user->setFirstname($firstName);

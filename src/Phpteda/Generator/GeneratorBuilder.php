@@ -8,7 +8,6 @@ use Phpteda\Generator\GeneratorInterface;
 use InvalidArgumentException;
 use Phpteda\Reflection\ReflectionClass;
 use RuntimeException;
-use Faker\Factory as FakerFactory;
 
 /**
  * Class for build up given generator

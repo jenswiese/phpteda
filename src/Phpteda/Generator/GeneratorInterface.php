@@ -2,7 +2,7 @@
 
 namespace Phpteda\Generator;
 
-use Faker\Generator;
+use Phpteda\TestData\Generator as TestDataGenerator;
 
 /**
  * Interface for Generator
@@ -13,10 +13,10 @@ use Faker\Generator;
 interface GeneratorInterface
 {
     /**
-     * @param Generator $generator
+     * @param TestDataGenerator $generator
      * @return GeneratorInterface
      */
-    public static function generate(Generator $generator);
+    public static function generate(TestDataGenerator $generator);
 
     /**
      * Returns XML-config in order to configure the generator

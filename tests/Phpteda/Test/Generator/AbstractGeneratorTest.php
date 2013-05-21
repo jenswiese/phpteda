@@ -72,7 +72,7 @@ class AbstractGeneratorTest extends \PHPUnit_Framework_TestCase
 
     public function testImplicitFakerInstantiationWithAnnotations()
     {
-        $faker = TestGenerator::generate()->getFaker();
+        $faker = TestGenerator::generate()->getTestDataGenerator();
 
         foreach ($faker->getProviders() as $provider) {
             if ($provider instanceof TestFakerProvider) {
