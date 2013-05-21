@@ -21,7 +21,7 @@
         "mikey179/vfsStream": "dev-master"
     },
     "bin": [
-        "bin/phpteda.php"
+        "bin/phpteda"
     ],
     "config": {
         "bin-dir": "bin"
