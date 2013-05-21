@@ -12,19 +12,6 @@ use PhptedaExamples\User;
  * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-03-09
  *
- *
- * @method static UserGenerator generate()
- *
- * <select name="User status">
- * @method UserGenerator activeUser() Generate active users?
- * @method UserGenerator deletedUser() Generate deleted users?
- * @method UserGenerator blockedUser() Generate blocked users?
- * </select>
- *
- * @method UserGenerator createdAtToday() Users should be created today?
- * @method UserGenerator noEmail() Users should contain no email?
- * @method UserGenerator withUserCategory($userCategory) Which user category should be taken?
- *
  */
 class UserGenerator extends \Phpteda\Generator\AbstractGenerator
 {
@@ -79,9 +66,9 @@ class UserGenerator extends \Phpteda\Generator\AbstractGenerator
             ->then($this->testDataGenerator->dateTimeBetween('today'))
             ->otherwise($this->testDataGenerator->dateTimeBetween('-1 year', '-6 months'));
 
-        $isActive = Choice::when($this->activeUser)->then(true)->otherwise($this->testDataGenerator->boolean);
-        $isDeleted = Choice::when($this->deletedUser)->then(true)->otherwise($this->testDataGenerator->boolean);
-        $isBlocked = Choice::when($this->blockedUser)->then(true)->otherwise($this->testDataGenerator->boolean);
+        $isActive = ('active' == $this->userStatus);
+        $isDeleted = ('deleted' == $this->userStatus);
+        $isBlocked = ('blocked' == $this->userStatus);
 
         $user = new User();
         $user->setFirstname($firstName);
