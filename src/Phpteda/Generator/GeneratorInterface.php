@@ -19,6 +19,14 @@ interface GeneratorInterface
     public static function generate(Generator $generator);
 
     /**
+     * Returns XML-config in order to configure the generator
+     *
+     * @return string XML-config for GeneratorBuilder
+     */
+    public static function getConfig();
+
+
+    /**
      * @return GeneratorInterface
      */
     public function shouldRemoveExistingData();

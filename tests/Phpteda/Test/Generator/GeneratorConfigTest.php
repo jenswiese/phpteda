@@ -7,9 +7,7 @@ use Phpteda\Generator\GeneratorConfig;
 use Phpteda\Generator\XMLConfigurationReader;
 
 /**
- * Class for ...
- *
- * @author jens
+ * @author Jens Wiese <jens@howtrueisfalse.de>
  * @since 2013-05-12
  */
 class GeneratorConfigTest extends \PHPUnit_Framework_TestCase
@@ -52,6 +50,32 @@ class GeneratorConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends testGroupWithProperty
      */
+    public function testGroupWithBooleanProperty()
+    {
+        $xml = '
+            <config>
+                <group title="Test Group">
+                    <boolean name="testProperty1">Yes or no?</boolean>
+                </group>
+            </config>
+        ';
+
+        $propertyGroups = $this->config->readFromXml($xml)->getPropertyGroups();
+
+        /** @var Property[] $properties */
+        $properties = $propertyGroups['Test Group']->getProperties();
+
+        $this->assertCount(1, $properties, 'Expected count of properties is wrong.');
+        $this->assertEquals('testProperty1', $properties[0]->getName());
+        $this->assertNull($properties[0]->getValue());
+        $this->assertEquals('Yes or no', $properties[0]->getQuestion());
+        $this->assertTrue($properties[0]->isBool());
+        $this->assertEmpty($properties[0]->getOptions());
+    }
+
+    /**
+     * @depends testGroupWithProperty
+     */
     public function testGroupContainingPropertyWithOptions()
     {
         $xml = '
@@ -76,9 +100,9 @@ class GeneratorConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertNotEmpty($properties[0]->getOptions());
 
         $expectedOptions = array(
-            'First' => '1',
-            'Second' => '2',
-            'Third' => '3'
+            '1' => 'First',
+            '2' => 'Second',
+            '3' => 'Third'
         );
         $this->assertEquals($expectedOptions, $properties[0]->getOptions());
     }
@@ -107,5 +131,37 @@ class GeneratorConfigTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Enter value 1', $properties[0]->getQuestion());
         $this->assertEquals('testProperty2', $properties[1]->getName());
         $this->assertEquals('Enter value 2', $properties[1]->getQuestion());
+    }
+
+    /**
+     * @depends testGroupWithProperty
+     */
+    public function testWithMultipleGroups()
+    {
+        $xml = '
+            <config>
+                <group title="Test Group 1">
+                    <property name="testProperty1">Enter value 1</property>
+                </group>
+                <group title="Test Group 2">
+                    <property name="testProperty2">Enter value 2</property>
+                    <property name="testProperty3">Enter value 3</property>
+                </group>
+            </config>
+        ';
+
+        $propertyGroups = $this->config->readFromXml($xml)->getPropertyGroups();
+        $this->assertCount(2, $propertyGroups, 'Expected to have 2 groups.');
+
+        /** @var Property[] $properties1 */
+        $properties1 = $propertyGroups['Test Group 1']->getProperties();
+        $this->assertCount(1, $properties1, 'Expected count of properties is wrong.');
+        $this->assertEquals('testProperty1', $properties1[0]->getName());
+
+        /** @var Property[] $properties1 */
+        $properties2 = $propertyGroups['Test Group 2']->getProperties();
+        $this->assertCount(2, $properties2, 'Expected count of properties is wrong.');
+        $this->assertEquals('testProperty2', $properties2[0]->getName());
+        $this->assertEquals('testProperty3', $properties2[1]->getName());
     }
 }

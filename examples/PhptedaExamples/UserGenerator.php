@@ -28,6 +28,29 @@ use PhptedaExamples\User;
  */
 class UserGenerator extends \Phpteda\Generator\AbstractGenerator
 {
+
+    /**
+     * @return string
+     */
+    public static function getConfig()
+    {
+        return '
+            <config>
+                <group title="Common">
+                    <property name="userStatus" title="Provide user status to generate">
+                        <option value="active">Only active users</option>
+                        <option value="deleted">Only deleted users</option>
+                        <option value="blocked">Only blocked users</option>
+                    </property>
+                    <boolean name="createdAtToday">Users should be created today?</boolean>
+                    <boolean name="noEmail">Users should contain no email?</boolean>
+                    <property name="withUserCategory">Which user category should be taken?</property>
+                </group>
+            </config>
+        ';
+    }
+
+
     /**
      * Implements custom way to delete existing data
      *

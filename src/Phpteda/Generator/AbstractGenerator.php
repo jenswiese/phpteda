@@ -4,6 +4,7 @@ namespace Phpteda\Generator;
 
 use Faker\Factory;
 use Faker\Generator;
+use Faker\Test\BarProvider;
 use Phpteda\Reflection\ReflectionClass;
 
 /**
@@ -39,10 +40,10 @@ abstract class AbstractGenerator implements GeneratorInterface
     protected function __construct(Generator $faker = null)
     {
         if (is_null($faker)) {
-            $faker = Factory::create('de_DE');
+            $faker = Factory::create($this->getLocale());
         }
 
-        foreach ((array) $this->getProvidersByAnnotation() as $providerClass) {
+        foreach ($this->getProviders() as $providerClass) {
             if (!class_exists($providerClass)) {
                 throw new \InvalidArgumentException("Provider '" . $providerClass . "' does not exist.");
             }
@@ -55,6 +56,37 @@ abstract class AbstractGenerator implements GeneratorInterface
     }
 
     /**
+     * Returns XML-config in order to configure the generator
+     *
+     * @return string XML-config for GeneratorBuilder
+     */
+    public static function getConfig()
+    {
+        return '<config></config>';
+    }
+
+    /**
+     * Returns Locale of testdata generation (e.g. de_DE)
+     *
+     * @return string Locale
+     */
+    public function getLocale()
+    {
+        return 'de_DE';
+    }
+
+    /**
+     * Returns providers for faker, override this method in order to
+     * define specific providers
+     *
+     * @return array of Faker-providers
+     */
+    public function getProviders()
+    {
+        return array();
+    }
+
+    /**
      * @param $name
      * @param $arguments
      *
@@ -62,6 +94,7 @@ abstract class AbstractGenerator implements GeneratorInterface
      */
     public function __call($name, $arguments)
     {
+var_dump($name, $arguments);
         if (empty($arguments)) {
             $this->options->setBooleanOption($name);
         } else {
@@ -133,22 +166,11 @@ abstract class AbstractGenerator implements GeneratorInterface
     /**
      * @return string[]
      */
-    protected function getProvidersByAnnotation()
+    protected function getProvidersByConfig()
     {
-        $classReader = new ReflectionClass(get_called_class());
-        return $classReader->getAnnotationReader()->getAnnotations('fakerProvider');
-    }
+        $reader = new XMLConfigurationReader();
 
-    /**
-     * @return string
-     */
-    protected function getLocaleByAnnotation()
-    {
-        $reflectionClass = new ReflectionClass(get_called_class());
-        $annotatedLocale = $reflectionClass->getAnnotationReader()->getAnnotations('fakerLocale');
-        $locale = empty($annotatedLocale) ? 'en_EN' : $annotatedLocale;
-
-        return $locale;
+        return $reader->getProviders();
     }
 
     /**

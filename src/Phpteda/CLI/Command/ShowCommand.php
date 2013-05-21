@@ -38,9 +38,7 @@ class ShowCommand extends Command
             throw new \RuntimeException("Generator directory is not set. Please run 'init' command first.");
         }
 
-        $this->getIO()->write('<comment>Using:</comment> ' . $this->getConfig()->getGeneratorDirectory());
-
-        $width = min(100, $this->getApplication()->getTerminalWidth());
+        $this->getIO()->write('<comment>Directory:</comment> ' . $this->getConfig()->getGeneratorDirectory());
 
         $directoryIterator = $this->getDirectoryIterator();
         if (0 == iterator_count($directoryIterator)) {
@@ -48,14 +46,14 @@ class ShowCommand extends Command
             return;
         }
 
+        $width = min(100, $this->getApplication()->getTerminalWidth());
         $table = Table::create($this->getIO(), $width);
         $table->addRow()
             ->addColumn('<comment>Generator</comment>')
             ->addColumn('<comment>Description</comment>');
 
         foreach ($directoryIterator as $generatorFile) {
-            $description = ReflectionClass::createByPathname($generatorFile->getPathname())
-                ->getAnnotationReader()->getDescription();
+            $description = ReflectionClass::createByPathname($generatorFile->getPathname())->getDescription();
 
             $table->addRow()
                 ->addColumn($generatorFile->getBasename('Generator.php'))

@@ -187,14 +187,15 @@ class ConsoleIO
     {
         $this->writeHeader($question);
 
-        foreach ($options as $key => $option) {
-            $this->write(sprintf('[%s] %s', $key, $option));
+        $optionValues = array_values($options);
+
+        foreach ($optionValues as $key => $optionQuestion) {
+            $this->write(sprintf('[%s] %s', $key+1, $optionQuestion));
         }
 
-        $validValues = array_keys($options);
-        $validator = function ($choosenValue) use ($validValues, $allowEmptyChoice, $default) {
-            $isValidValue = in_array($choosenValue, $validValues);
-            $isAllowedEmpty = empty($choosenValue) && $allowEmptyChoice;
+        $validator = function ($choosenValue) use ($optionValues, $allowEmptyChoice, $default) {
+            $isValidValue = isset($optionValues[$choosenValue-1]);
+            $isAllowedEmpty = is_null($choosenValue) && $allowEmptyChoice;
 
             if ($isValidValue) {
                 return  $choosenValue;
@@ -207,6 +208,13 @@ class ConsoleIO
 
         $message = 'Choose' . ($allowEmptyChoice ? ' (ENTER for no choice)' : '') . ': ';
 
-        return $this->askAndValidate($message, $validator, false, null);
+        $answer = $this->askAndValidate($message, $validator, false, $default);
+
+        if (!is_null($answer)) {
+            $optionRealValues = array_keys($options);
+            $answer = $optionRealValues[$answer-1];
+        }
+
+        return $answer;
     }
 }

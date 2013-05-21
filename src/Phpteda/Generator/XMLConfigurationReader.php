@@ -43,9 +43,11 @@ class XMLConfigurationReader
     {
         while ($this->reader->read()) {
             if ($this->reader->nodeType == XMLReader::ELEMENT) {
-                break;
+                return true;
             }
         }
+
+        return false;
     }
 
     /**
@@ -77,7 +79,7 @@ class XMLConfigurationReader
      */
     public function isProperty()
     {
-        return ('property' == $this->getElementName());
+        return ('property' == $this->getElementName() && !$this->hasChildElements());
     }
 
     /**
@@ -85,7 +87,7 @@ class XMLConfigurationReader
      */
     public function isPropertyWithOptions()
     {
-        return ('property' == $this->reader->localName && $this->hasChildNodes());
+        return ('property' == $this->reader->localName && $this->hasChildElements());
     }
 
     /**
@@ -124,9 +126,11 @@ class XMLConfigurationReader
     /**
      * @return bool
      */
-    public function hasChildNodes()
+    public function hasChildElements()
     {
-        return $this->reader->expand()->hasChildNodes();
+        $xml = new \SimpleXMLElement($this->reader->readOuterXml());
+
+        return (0 < $xml->count());
     }
 
     /**

@@ -4,10 +4,9 @@ namespace Phpteda\CLI\Command;
 
 use Phpteda\CLI\Config;
 use Phpteda\CLI\Helper\Table;
-use Phpteda\Generator\Configuration\Configurator;
+use Phpteda\Generator\GeneratorBuilder;
 use Phpteda\Generator\Configuration\Property;
 use Phpteda\Generator\Configuration\PropertyGroup;
-use Phpteda\Generator\Configuration\PropertySelection;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -23,8 +22,8 @@ use InvalidArgumentException;
  */
 class GenerateCommand extends Command
 {
-    /** @var Configurator */
-    protected $configurator;
+    /** @var GeneratorBuilder */
+    protected $builder;
 
 
     protected function configure()
@@ -69,7 +68,7 @@ class GenerateCommand extends Command
             $this->getConfig()->getGeneratorDirectory(),
             $input->getArgument('generator-file')
         );
-        $this->configurator = Configurator::createByGeneratorPathname($pathname);
+        $this->builder = GeneratorBuilder::createByGeneratorPathname($pathname);
         $this->configureAndRunGenerator();
 
         $this->getIO()->writeInfo('Finished generation.');
@@ -77,15 +76,11 @@ class GenerateCommand extends Command
 
     protected function configureAndRunGenerator()
     {
-        foreach ($this->configurator->getProperties() as $property) {
-            if ($property instanceof PropertyGroup) {
-                $this->configurePropertyGroup($property);
-            } elseif ($property instanceof PropertySelection) {
-                $this->configurePropertySelection($property);
-            }
+        foreach ($this->builder->getPropertyGroups() as $group) {
+            $this->configurePropertyGroup($group);
         }
 
-        $generator = $this->configurator->getConfiguredGenerator();
+        $generator = $this->builder->getConfiguredGenerator();
 
         $amount = $this->getIO()->ask('How many?', 1);
         $shouldRemoveExistingData = $this->getIO()->askConfirmation('Remove existing data?', false);
@@ -113,6 +108,8 @@ class GenerateCommand extends Command
         foreach ($group->getProperties() as $property) {
             if ($property->isBool()) {
                 $answer = $this->getIO()->askConfirmation($property->getQuestion(), false);
+            } elseif ($property->hasOptions()) {
+                $answer = $this->getIO()->choice($property->getQuestion(), $property->getOptions());
             } else {
                 $answer = $this->getIO()->ask($property->getQuestion());
             }

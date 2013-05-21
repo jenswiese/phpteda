@@ -20,6 +20,15 @@ class GeneratorConfig
     /** @var PropertyGroup[] */
     protected $propertyGroups = array();
 
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->setXmlReader(new XMLConfigurationReader());
+    }
+
     /**
      * @param XMLConfigurationReader $xmlReader
      */
@@ -58,10 +67,9 @@ class GeneratorConfig
                 $property = new Property();
                 $property->setName($this->xmlReader->getAttribute('name'));
                 $property->setQuestion($this->xmlReader->getAttribute('title'));
-                foreach ($this->xmlReader->getPropertyOptions() as $name => $value) {
+                foreach ($this->xmlReader->getPropertyOptions() as $value => $name) {
                     $property->addOption($name, $value);
                 }
-
                 $this->propertyGroups[$groupTitle]->addProperty($property);
                 $this->xmlReader->next();
             }

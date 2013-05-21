@@ -16,24 +16,12 @@ class ReflectionClass
     /** @var \ReflectionClass */
     protected $reflectionClass;
 
-    /** @var AnnotationReader */
-    protected $annotationReader;
-
     /**
      * @param $className
      */
     public function __construct($className)
     {
         $this->reflectionClass = new \ReflectionClass($className);
-        $this->annotationReader = new AnnotationReader($this->reflectionClass->getDocComment());
-    }
-
-    /**
-     * @return AnnotationReader
-     */
-    public function getAnnotationReader()
-    {
-        return $this->annotationReader;
     }
 
     /**
@@ -96,5 +84,10 @@ class ReflectionClass
     public function getName()
     {
         return $this->reflectionClass->getName();
+    }
+
+    public function getDescription()
+    {
+        return AnnotationReader::create($this->reflectionClass->getDocComment())->getDescription();
     }
 }
