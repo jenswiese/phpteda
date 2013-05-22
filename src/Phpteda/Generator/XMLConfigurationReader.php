@@ -101,6 +101,14 @@ class XMLConfigurationReader
     /**
      * @return bool
      */
+    public function isMultipleProperty()
+    {
+        return (('property' == $this->getElementName()) && ('multiple' == $this->getAttribute('type')));
+    }
+
+    /**
+     * @return bool
+     */
     public function isTextNode()
     {
         return ('#text' == $this->getElementName());

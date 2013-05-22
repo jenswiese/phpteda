@@ -52,6 +52,12 @@ class GeneratorConfig
                 $groupTitle = $this->xmlReader->getAttribute('title');
                 $groupIdentifier = $this->xmlReader->getElementIdentifier();
                 $this->propertyGroups[$groupIdentifier] = new PropertyGroup($groupTitle);
+            } elseif ($this->xmlReader->isMultipleProperty()) {
+                $property = new Property();
+                $property->setName($this->xmlReader->getAttribute('name'));
+                $property->setQuestion($this->xmlReader->getElementValue());
+                $property->setType(Property::TYPE_MULTIPLE);
+                $this->propertyGroups[$groupIdentifier]->addProperty($property);
             } elseif ($this->xmlReader->isBooleanProperty()) {
                 $property = new Property();
                 $property->setName($this->xmlReader->getAttribute('name'));

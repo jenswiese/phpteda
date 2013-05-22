@@ -23,7 +23,7 @@ class UserGenerator extends \Phpteda\Generator\AbstractGenerator
     {
         return '
             <config>
-                <group title="Common">
+                <group>
                     <property name="userStatus" title="Provide user status to generate">
                         <option value="active">Only active users</option>
                         <option value="deleted">Only deleted users</option>
@@ -32,6 +32,9 @@ class UserGenerator extends \Phpteda\Generator\AbstractGenerator
                     <property name="createdAtToday" type="boolean">Users should be created today?</property>
                     <property name="noEmail" type="boolean">Users should contain no email?</property>
                     <property name="withUserCategory">Which user category should be taken?</property>
+                </group>
+                <group>
+                    <property name="testMulti" type="multiple">Provide Urls for testing</property>
                 </group>
             </config>
         ';

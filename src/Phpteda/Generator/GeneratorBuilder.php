@@ -145,5 +145,7 @@ class GeneratorBuilder
         foreach ($this->getProperties() as $property) {
             $this->configuredGenerator->{$property->getName()}($property->getValue());
         }
+
+        var_dump($this->configuredGenerator);
     }
 }

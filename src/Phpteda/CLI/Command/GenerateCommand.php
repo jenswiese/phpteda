@@ -110,6 +110,8 @@ class GenerateCommand extends Command
                 $answer = $this->getIO()->askConfirmation($property->getQuestion(), false);
             } elseif ($property->hasOptions()) {
                 $answer = $this->getIO()->choice($property->getQuestion(), $property->getOptions());
+            } elseif ($property->isMultiple()) {
+                $answer = $this->getIO()->askMultiple($property->getQuestion());
             } else {
                 $answer = $this->getIO()->ask($property->getQuestion());
             }

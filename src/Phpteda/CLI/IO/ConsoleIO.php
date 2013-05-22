@@ -97,6 +97,16 @@ class ConsoleIO
     }
 
     /**
+     * @param string $message
+     * @param bool $newline
+     */
+    public function writeQuestion($message, $newline = true)
+    {
+        $message = sprintf('<question>%s</question>', $message);
+        $this->write($message, $newline);
+    }
+
+    /**
      * @param $message
      */
     public function writeHeader($message)
@@ -124,6 +134,27 @@ class ConsoleIO
         $question = sprintf('<question>%s</question>%s: ', $question, $choiceInfo);
 
         return $this->helperSet->get('dialog')->ask($this->output, $question, $default);
+    }
+
+    /**
+     * @param $question
+     * @return mixed
+     */
+    public function askMultiple($question)
+    {
+        $this->writeQuestion($question . ':');
+
+        $values = array();
+
+        while (true) {
+            $answer = $this->helperSet->get('dialog')->ask($this->output, '> ');
+            if (is_null($answer)) {
+                break;
+            }
+            $values[] = $answer;
+        }
+
+        return $values;
     }
 
     /**

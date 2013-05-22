@@ -13,6 +13,7 @@ class Property implements PropertyInterface
     const TYPE_BOOL = 1;
     const TYPE_MIXED = 2;
     const TYPE_WITH_OPTION = 3;
+    const TYPE_MULTIPLE = 4;
 
     /** @var string */
     protected $name;
@@ -137,6 +138,14 @@ class Property implements PropertyInterface
     public function isBool()
     {
         return ($this->type == self::TYPE_BOOL);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMultiple()
+    {
+        return ($this->type == self::TYPE_MULTIPLE);
     }
 
     /**

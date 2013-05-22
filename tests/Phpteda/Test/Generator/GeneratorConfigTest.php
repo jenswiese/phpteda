@@ -76,6 +76,31 @@ class GeneratorConfigTest extends \PHPUnit_Framework_TestCase
     /**
      * @depends testGroupWithProperty
      */
+    public function testGroupWithMultipleProperty()
+    {
+        $xml = '
+            <config>
+                <group title="Test Group 1">
+                    <property name="testProperty1" type="multiple">Enter values</property>
+                </group>
+           </config>
+        ';
+
+        $propertyGroups = $this->config->readFromXml($xml)->getPropertyGroups();
+
+        /** @var Property[] $properties */
+        $properties = $propertyGroups[0]->getProperties();
+
+        $this->assertCount(1, $properties, 'Expected count of properties is wrong.');
+        $this->assertEquals('testProperty1', $properties[0]->getName());
+        $this->assertNull($properties[0]->getValue());
+        $this->assertEquals('Enter values', $properties[0]->getQuestion());
+        $this->assertTrue($properties[0]->isMultiple(), 'Should be type "multiple".');
+    }
+
+    /**
+     * @depends testGroupWithProperty
+     */
     public function testGroupContainingPropertyWithOptions()
     {
         $xml = '
