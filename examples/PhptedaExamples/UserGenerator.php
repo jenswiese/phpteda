@@ -2,7 +2,6 @@
 
 namespace PhptedaExamples;
 
-use Faker\Factory;
 use Phpteda\Util\Choice;
 use PhptedaExamples\User;
 

@@ -40,6 +40,7 @@ class ShowCommand extends Command
 
         $this->getIO()->writeComment('Directory: ', false);
         $this->getIO()->write($this->getConfig()->getGeneratorDirectory());
+        $this->getIO()->newLine();
 
         $directoryIterator = $this->getDirectoryIterator();
         if (0 == iterator_count($directoryIterator)) {

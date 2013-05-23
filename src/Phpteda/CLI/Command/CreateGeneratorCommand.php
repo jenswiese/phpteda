@@ -38,8 +38,9 @@ class CreateGeneratorCommand extends Command
             throw new \RuntimeException("Generator directory is not set. Please run 'init' command first.");
         }
 
-        $this->getIO()->writeComment('Directory ', false);
+        $this->getIO()->writeComment('Directory: ', false);
         $this->getIO()->write($this->getConfig()->getGeneratorDirectory());
+        $this->getIO()->newLine();
 
         $name = $this->getIO()->ask('Name of Generator');
         $description = $this->getIO()->ask('Description');

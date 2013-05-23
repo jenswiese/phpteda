@@ -2,6 +2,7 @@
 
 namespace Phpteda\CLI\IO;
 
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\DialogHelper;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,6 +37,15 @@ class ConsoleIO
         $this->input = $input;
         $this->output = $output;
         $this->helperSet = $helperSet;
+
+        $this->output->getFormatter()->setStyle(
+            'header',
+            new OutputFormatterStyle('yellow', null, array('bold'))
+        );
+        $this->output->getFormatter()->setStyle(
+            'question',
+            new OutputFormatterStyle('yellow', null, array('bold'))
+        );
     }
 
 
@@ -64,6 +74,18 @@ class ConsoleIO
     public function write($message, $newline = true)
     {
         $this->output->write($message, $newline);
+    }
+
+    /**
+     * Outputs just a empty new line
+     *
+     * @param int $number
+     */
+    public function newLine($number = 1)
+    {
+        for ($i = 0; $i < $number; $i++) {
+            $this->write('');
+        }
     }
 
     /**
@@ -119,8 +141,7 @@ class ConsoleIO
         $message = $message . ':';
 
         $this->write('');
-        $this->writeComment($message);
-        $this->writeComment(str_pad('', strlen($message), '-'));
+        $this->write(sprintf('<header>%s</header>', $message));
     }
 
     /**
@@ -221,7 +242,7 @@ class ConsoleIO
      */
     public function choice($question, array $options, $allowEmptyChoice = true, $default = null)
     {
-        $this->writeHeader($question);
+        $this->write($question);
 
         $optionValues = array_values($options);
 
@@ -242,7 +263,7 @@ class ConsoleIO
             throw new \Exception(sprintf('Value "%s" is invalid', $choosenValue));
         };
 
-        $message = 'Choose' . ($allowEmptyChoice ? ' (ENTER for no choice)' : '') . ': ';
+        $message = 'Choose' . ($allowEmptyChoice ? ' (ENTER for no choice)' : '');
 
         $answer = $this->askAndValidate($message, $validator, false, $default);
 
