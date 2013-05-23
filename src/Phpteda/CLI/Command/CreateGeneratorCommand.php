@@ -38,14 +38,15 @@ class CreateGeneratorCommand extends Command
             throw new \RuntimeException("Generator directory is not set. Please run 'init' command first.");
         }
 
-        $this->getIO()->write('<comment>Using:</comment> ' . $this->getConfig()->getGeneratorDirectory());
+        $this->getIO()->writeComment('Directory ', false);
+        $this->getIO()->write($this->getConfig()->getGeneratorDirectory());
 
         $name = $this->getIO()->ask('Name of Generator');
         $description = $this->getIO()->ask('Description');
         $namespace = $this->getIO()->ask('Namespace', $this->getConfig()->getGeneratorNamespace());
         $this->getConfig()->setGeneratorNamespace($namespace);
 
-        $filepath = $this->getConfig()->getGeneratorDirectory() . DIRECTORY_SEPARATOR . $name .  'Generator.php';
+        $filepath = $this->getGeneratorFilepath($name);
         if (file_exists($filepath)) {
             $overwriteExistingFile = $this->getIO()->askConfirmation('File already exists, overwrite it?', false);
             if (!$overwriteExistingFile) {
@@ -62,8 +63,9 @@ class CreateGeneratorCommand extends Command
     /**
      * Returns Generator code
      *
-     * @param $name
-     * @param $description
+     * @param string $name
+     * @param string $description
+     * @param string $namespace
      * @return string
      */
     public function getGeneratorCode($name, $description, $namespace)
@@ -73,7 +75,6 @@ class CreateGeneratorCommand extends Command
 
 namespace %s;
 
-use Faker\Factory;
 use Phpteda\Generator\AbstractGenerator;
 
 /**
@@ -81,14 +82,20 @@ use Phpteda\Generator\AbstractGenerator;
  *
  * @author <YOUR NAME HERE>
  * @since %s
- *
  */
 class %sGenerator extends AbstractGenerator
 {
     /**
-     * Implements custom way to delete existing data
-     *
-     * @return self
+     * @inheritDoc
+     */
+
+    public static function getConfig()
+    {
+        return '<config></config>';
+    }
+
+    /**
+     * @inheritDoc
      */
     protected function removeExistingData()
     {
@@ -96,9 +103,7 @@ class %sGenerator extends AbstractGenerator
     }
 
     /**
-     * Implements custom generator behaviour
-     *
-     * @return void
+     * @inheritDoc
      */
     protected function generateData()
     {
@@ -114,5 +119,14 @@ EOT;
             date('Y-m-d'),
             $name
         );
+    }
+
+    /**
+     * @param $name
+     * @return string
+     */
+    protected function getGeneratorFilepath($name)
+    {
+        return $this->getConfig()->getGeneratorDirectory() . DIRECTORY_SEPARATOR . $name . 'Generator.php';
     }
 }
