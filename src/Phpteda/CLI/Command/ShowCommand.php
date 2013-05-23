@@ -38,7 +38,8 @@ class ShowCommand extends Command
             throw new \RuntimeException("Generator directory is not set. Please run 'init' command first.");
         }
 
-        $this->getIO()->write('<comment>Directory:</comment> ' . $this->getConfig()->getGeneratorDirectory());
+        $this->getIO()->writeComment('Directory: ', false);
+        $this->getIO()->write($this->getConfig()->getGeneratorDirectory());
 
         $directoryIterator = $this->getDirectoryIterator();
         if (0 == iterator_count($directoryIterator)) {
