@@ -35,15 +35,14 @@ class InitCommand extends Command
         $this->askGeneratorDirectory();
 
         $this->getApplication()->getConfig();
-        $this->getIO()->write('<info>Configuration is written.</info>');
+        $this->getIO()->writeInfo('Configuration is written.');
     }
 
     protected function askGeneratorDirectory()
     {
         while (true) {
-            $directory = $this->getIO()->askWithSuggestions(
-                "Provide directory for Generators",
-                $this->getAvailableGeneratorDirectories(),
+            $directory = $this->getIO()->ask(
+                'Provide directory for Generators',
                 $this->getConfig()->getGeneratorDirectory()
             );
 
@@ -59,9 +58,8 @@ class InitCommand extends Command
     protected function askBootstrapPathname()
     {
         while (true) {
-            $bootstrapPathname = $this->getIO()->askWithSuggestions(
-                "Provide path for bootstrap file",
-                $this->getAvailableBootstrapPathnames(),
+            $bootstrapPathname = $this->getIO()->ask(
+                'Provide path for bootstrap file',
                 $this->getConfig()->getBootstrapPathname()
             );
 
@@ -76,52 +74,5 @@ class InitCommand extends Command
             }
             $this->getIO()->writeError('This is not a valid file.');
         }
-    }
-
-    /**
-     * @return array
-     */
-    protected function getAvailableBootstrapPathnames()
-    {
-        $bootstrapPathnames = array();
-        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(getcwd()));
-
-        foreach ($iterator as $entry) {
-            if ('bootstrap.php' != $entry->getBasename()) {
-                continue;
-            }
-
-            $bootstrapPathnames[] = $entry->getPathname();
-        }
-
-        return $bootstrapPathnames;
-    }
-
-    /**
-     * Retrieves directories that are most likely made to hold generators
-     *
-     * @return array
-     */
-    protected function getAvailableGeneratorDirectories()
-    {
-        $directories = array();
-
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator(getcwd(), RecursiveDirectoryIterator::SKIP_DOTS),
-            RecursiveIteratorIterator::CHILD_FIRST
-        );
-
-        foreach ($iterator as $entry) {
-            $isGeneratorFile = (strpos($entry->getFilename(), 'Generator.php') !== false);
-            $alreadyRetrieved = in_array($entry->getPath(), $directories);
-
-            if ($entry->isDir() || !$isGeneratorFile || $alreadyRetrieved) {
-                continue;
-            }
-
-            $directories[] = $entry->getPath();
-        }
-
-        return $directories;
     }
 }
